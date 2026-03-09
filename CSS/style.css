@@ -1,44 +1,5 @@
-:root {
-    /* Fondos */
-    --bg:           #0a0a0f;           /* fondo principal oscuro */
-    --bg-deep:      #05030a;           /* fondo más profundo para contraste */
-    --bg-mid:       #0c0818;           /* fondo intermedio paneles grandes */
-    --grid-bg:      #0d1117;           /* tablero casillas neutras */
-    --panel-bg:     rgba(0,255,136,0.04); /* paneles o overlays suaves */
-
-    /* Verde principal y variantes */
-    --green:        #00ff88;           /* títulos, botones, elementos mágicos */
-    --green-dim:    #00aa55;           /* subtítulos, texto secundario, bordes */
-    --green-dark:   #003322;           /* sombras, profundidad */
-    --green-faint:  rgba(0,255,136,0.06); /* overlays muy suaves */
-
-    /* Texto principal */
-    --text:         #00ff88;           /* mensajes, puntajes, instrucciones */
-
-    /* Bordes y glow */
-    --border:       rgba(0,255,136,0.25);
-    --border-bright:rgba(0,255,136,0.6);
-    --glow-sm:      0 0 8px rgba(0,255,136,0.4);
-    --glow-md:      0 0 18px rgba(0,255,136,0.5);
-    --glow-lg:      0 0 35px rgba(0,255,136,0.6);
-    --rune-glow:    rgba(0,255,136,0.35);
-
-    /* Colores de resalte / alertas */
-    --gold:         #c9933a;           /* para tesoros casillas especiales */
-    --gold-light:   #f0c060;
-    --gold-dim:     #7a5520;
-    --border-gold:  rgba(201,147,58,0.4);
-
-    --crimson:      #8b1a1a;           /* penalizaciones o peligro */
-    --crimson-glow: #cc2222;
-    --food:         #ff3366;           /* elementos críticos comida */
-    --food-glow:    #ff336688;
-
-    /* Otros neutros / secundarios */
-    --silver:       #c8c8d8;           /* texto neutro, paneles secundarios */
-    --silver-dim:   #7a7a90;
-    --parchment:    #e8dfc0;           /* fondo de cartas */
-}
+/* importamos los colores */
+@import url('colors.css');
 
 /* aplicamos un reset a todos los elementos para eliminar margenes y padding por defecto*/
 * {
@@ -85,6 +46,28 @@ body::after{
     background: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 55%, rgba(0,0,0,0.75) 100%);
     pointer-events: none;  /* Permite interacción con elementos debajo */
     z-index: 99;   
+}
+
+/* Partículas flotantes (estrellas/chispas) */
+.sparks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.spark {
+    position: absolute;
+    border-radius: 50%;
+    animation: sparkFloat linear infinite;
+}
+
+@keyframes sparkFloat {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
 }
 
 /* Estilo para el menu del juego*/

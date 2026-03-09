@@ -20,3 +20,5 @@ El juego fue desarrollado originalmente en **Python** junto a dos amigos.
 **Puedes encontrar la versión original del juego en el siguiente repositorio:**
 * 🔗[Repositorio de la versión en consola](https://github.com/JohnArbaiza1/Camino-de-leyendas-Juego)
 
+## 📦 Estado del proyecto
+🚧 Proyecto en desarrollo… Preparando los paneles, hechizos y overlays 🔮
