@@ -1,0 +1,344 @@
+:root {
+    /* Fondos */
+    --bg:           #0a0a0f;           /* fondo principal oscuro */
+    --bg-deep:      #05030a;           /* fondo más profundo para contraste */
+    --bg-mid:       #0c0818;           /* fondo intermedio paneles grandes */
+    --grid-bg:      #0d1117;           /* tablero casillas neutras */
+    --panel-bg:     rgba(0,255,136,0.04); /* paneles o overlays suaves */
+
+    /* Verde principal y variantes */
+    --green:        #00ff88;           /* títulos, botones, elementos mágicos */
+    --green-dim:    #00aa55;           /* subtítulos, texto secundario, bordes */
+    --green-dark:   #003322;           /* sombras, profundidad */
+    --green-faint:  rgba(0,255,136,0.06); /* overlays muy suaves */
+
+    /* Texto principal */
+    --text:         #00ff88;           /* mensajes, puntajes, instrucciones */
+
+    /* Bordes y glow */
+    --border:       rgba(0,255,136,0.25);
+    --border-bright:rgba(0,255,136,0.6);
+    --glow-sm:      0 0 8px rgba(0,255,136,0.4);
+    --glow-md:      0 0 18px rgba(0,255,136,0.5);
+    --glow-lg:      0 0 35px rgba(0,255,136,0.6);
+    --rune-glow:    rgba(0,255,136,0.35);
+
+    /* Colores de resalte / alertas */
+    --gold:         #c9933a;           /* para tesoros casillas especiales */
+    --gold-light:   #f0c060;
+    --gold-dim:     #7a5520;
+    --border-gold:  rgba(201,147,58,0.4);
+
+    --crimson:      #8b1a1a;           /* penalizaciones o peligro */
+    --crimson-glow: #cc2222;
+    --food:         #ff3366;           /* elementos críticos comida */
+    --food-glow:    #ff336688;
+
+    /* Otros neutros / secundarios */
+    --silver:       #c8c8d8;           /* texto neutro, paneles secundarios */
+    --silver-dim:   #7a7a90;
+    --parchment:    #e8dfc0;           /* fondo de cartas */
+}
+
+/* aplicamos un reset a todos los elementos para eliminar margenes y padding por defecto*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* aplicamos los estilos al body */
+body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Nunito', sans-serif;
+    overflow: hidden;
+}
+
+/* Pseudo-elemento ::before que se coloca sobre todo el body */
+body::before{
+    content: ''; /* Necesario para que el pseudo-elemento se renderice */
+    position: fixed;
+    inset: 0;
+    /* Esto creara un patrón de líneas muy finas que se repiten verticalmente */
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0,255,136,0.018) 3px,
+            rgba(0,255,136,0.018) 4px
+        );
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Pseudo-elemento ::after que crea un efecto de viñeta o sombra alrededor del body */
+body::after{
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 55%, rgba(0,0,0,0.75) 100%);
+    pointer-events: none;  /* Permite interacción con elementos debajo */
+    z-index: 99;   
+}
+
+/* Estilo para el menu del juego*/
+#menu-screen{
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    transition: opacity 0.6 ease, transform 0.6s ease;
+}
+
+#menu-screen.hide {
+    opacity: 0;
+    transform: scale(1.04);
+    pointer-events: none;
+}
+
+/* ── Ornamento superior ── */
+.ornament {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    animation: fadeInMenu 1.4s ease 0.2s both;
+}
+
+.ornament-line {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.ornament-diamond {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px var(--gold);
+}
+
+/* Estilo para el titulo del menu e info*/
+.menu-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 900;
+    font-size: clamp(1rem, 4vw, 3rem);
+    text-align: center;
+    line-height: 1.15;
+    background: linear-gradient(90deg, var(--green), var(--green-dim), var(--green-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(76,201,240,0.5));
+    margin-bottom: 6px;
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+    0%,100% { filter: drop-shadow(0 0 20px rgba(76, 202, 240, 0.357)); }
+    50%      { filter: drop-shadow(0 0 40px rgba(77, 255, 216, 0.6)); }
+}
+
+.menu-subtitle {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    letter-spacing: 1px;
+    text-transform: none;
+    opacity: 0.9; /* más visible que 0.4 */
+    margin: 0 0 40px 0; /* separarlo del resto del menú */
+    text-align: center;
+    line-height: 1.5;
+    max-width: 800px;      /* limita el ancho */
+    width: 90%;            /* se adapta a pantallas pequeñas */
+    color: var(--parchment);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.9);
+}
+
+/* Tarjeta de selección */
+.menu-card{
+    position: relative;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 460px;
+    backdrop-filter: blur(16px);
+    animation: fadeInMenu 1.4s ease 0.6s both;
+}
+
+/* Esquinas decorativas */
+.menu-card::before,
+.menu-card::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.7;
+}
+
+.menu-card::before {
+    top: -1px; left: -1px;
+    border-width: 2px 0 0 2px;
+    border-radius: 3px 0 0 0;
+}
+
+.menu-card::after {
+    bottom: -1px; right: -1px;
+    border-width: 0 2px 2px 0;
+    border-radius: 0 0 3px 0;
+}
+
+/* Esquinas extra vía pseudo-elemento del wrapper */
+.card-corner-tr,
+.card-corner-bl {
+    position: absolute;
+    width: 18px; height: 18px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.card-corner-tr {
+    top: -1px; right: -1px;
+    border-width: 2px 2px 0 0;
+    border-radius: 0 3px 0 0;
+}
+
+.card-corner-bl {
+    bottom: -1px; left: -1px;
+    border-width: 0 0 2px 2px;
+    border-radius: 0 0 0 3px;
+}
+
+.menu-card h2 {
+    font-family: 'Cinzel', serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 3px;
+    color: var(--gold-light);
+    text-align: center;
+    margin-bottom: 22px;
+    text-transform: uppercase;
+}
+
+/* Divisor */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+
+.divider-gem {
+    font-size: 0.5rem;
+    color: var(--gold);
+}
+
+/* Filas de jugador */
+.player-input-row {
+    overflow: hidden;
+    max-height: 80px;
+    opacity: 1;
+    margin-bottom: 14px; 
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-bottom 0.4s ease;
+}
+
+.player-input-row.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin-bottom: 0;
+    pointer-events: none;
+}
+
+.player-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    padding-left: 4px;
+}
+
+.select-wrapper { position: relative; }
+
+.select-wrapper::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--green-dim);
+    border-radius: 1px;
+    transition: background 0.25s, box-shadow 0.25s;
+    z-index: 2;
+}
+
+.select-wrapper:has(select:focus)::before,
+.select-wrapper:has(select:hover)::before {
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+}
+
+.select-wrapper select {
+    width: 100%;
+    padding: 10px 14px 10px 16px;
+    border-radius: 0;
+    border: 1px solid rgba(246, 238, 9, 0.23);
+    border-left: none;
+    background: rgba(13,17,23,0.9);
+    color: var(--text);
+    font-family: 'Crimson Text', serif;
+    font-weight: 700;
+    font-size: 0.90rem;
+    letter-spacing: 0.5px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+
+.select-wrapper select option {
+    background: #0d1117;
+    color: var(--text);
+}
+
+/* Botón de inicio  */
+.btn-start{
+    margin-top: 8px;
+    width: 100%;
+    padding: 14px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    background: linear-gradient(135deg, #c9933a 0%, #f0c060 45%, #c9933a 100%);
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s;
+    box-shadow: 0 4px 20px rgba(201,147,58,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+    color: var(--green-dark);
+}
+
+.btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(201,147,58,0.55), inset 0 1px 0 rgba(255,255,255,0.3);
+}

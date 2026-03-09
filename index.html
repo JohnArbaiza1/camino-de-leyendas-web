@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camino de Leyendas Web</title>
+
+    <!-- llamando a las fuentes a utilizar-->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <!-- llamando a los estilos para el juego-->
+    <link rel="stylesheet" href="./CSS/style.css">
+
+</head>
+<body>
+
+    <!-- contenedor principal del juego -->
+    <div class="game-container">
+
+        <!-- Menú de inicio -->
+        <div id="menu-screen">
+
+            <div class="ornament">
+                <div class="ornament-line"></div>
+                <div class="ornament-diamond"></div>
+                <div class="ornament-line"></div>
+            </div>
+
+            <div class="menu-title">Camino de Leyendas <br> Web</div>
+            <p class="menu-subtitle">
+                Atrévete a atravesar un camino lleno de desafíos, peligros y recompensas.  
+                El primer jugador que lleve una de las tres fichas sagradas hasta la meta será proclamado un héroe legendario.  <br>
+                ¿Tienes lo necesario para convertirte en leyenda?
+            </p>
+
+            <div class="menu-card">
+
+                <div class="card-corner-tr"></div>
+                <div class="card-corner-bl"></div>
+
+                <h2>SELECCIONA TU PERSONAJE</h2>
+                
+                <div class="divider">
+                    <div class="divider-line"></div>
+                    <span class="divider-gem">◆</span>
+                    <div class="divider-line"></div>
+                </div>
+
+                <!-- Cantidad de personas a jugar-->
+                <di class="player-input-r">
+                    <div class="player-label" style="text-align: center;">Nº de Jugadores</div>
+                    <div class="select-wrapper">
+                        <select id="player-count">
+                            <option value="">— Selecciona —</option>
+                            <!-- <option value="1">1 Jugador</option> -->
+                            <option value="2">2 Jugadores</option>
+                            <option value="3">3 Jugadores</option>
+                            <option value="4">4 Jugadores</option>
+                        </select>
+                    </div>                   
+                </di>
+                <br>
+
+                <!-- Selects de personajes (ocultos por defecto) -->
+                <div class="player-input-row hidden" id="row-player-1">
+                    <div class="player-label">Jugador I</div>
+                    <div class="select-wrapper">
+                        <select id="char0">
+                            <option value="">— Elige un personaje —</option>
+                            <option value="guerrero">⚔️  Guerrero/a</option>
+                            <option value="mago">🔮  Mago/a</option>
+                            <option value="arqueiro">🏹  Arquero/a</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="player-input-row hidden" id="row-player-2">
+                    <div class="player-label">Jugador II</div>
+                    <div class="select-wrapper">
+                        <select id="char1">
+                            <option value="">— Elige un personaje —</option>
+                            <option value="guerrero">⚔️  Guerrero/a</option>
+                            <option value="mago">🔮  Mago/a</option>
+                            <option value="arqueiro">🏹  Arquero/a</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="player-input-row hidden" id="row-player-3">
+                    <div class="player-label">Jugador III</div>
+                    <div class="select-wrapper">
+                        <select id="char2">
+                            <option value="">— Elige un personaje —</option>
+                            <option value="guerrero">⚔️  Guerrero/a</option>
+                            <option value="mago">🔮  Mago/a</option>
+                            <option value="arqueiro">🏹  Arquero/a</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="player-input-row hidden" id="row-player-4">
+                    <div class="player-label">Jugador IV</div>
+                    <div class="select-wrapper">
+                        <select id="char3">
+                            <option value="">— Elige un personaje —</option>
+                            <option value="guerrero">⚔️  Guerrero/a</option>
+                            <option value="mago">🔮  Mago/a</option>
+                            <option value="arqueiro">🏹  Arquero/a</option>
+                        </select>
+                    </div>
+                </div>        
+
+                <button class="btn-start"> Comenzar la Aventura </button>
+            </div>
+        </div>
+
+    </div>
+    <script type="module" src="/JS/main.js"></script>
+</body>
+</html>
