@@ -11,11 +11,12 @@ El juego nació a partir del siguiente proyecto académico:
 
 > _El siguiente proyecto consiste en desarrollar una dinámica de juego de mesa mediante el uso del lenguaje de programación Python, empleando algunos módulos que este ofrece para poder llevar a cabo un juego interactivo con los usuarios o jugadores que se adentren en el Camino de las Leyendas._
 
-La **versión original en consola** fue desarrollada como trabajo académico en colaboración con otros compañeros.
-Sin embargo la versión web surge como una **práctica personal**.
+La **versión original en consola** fue desarrollada como trabajo académico **por mí junto a dos amigos**. Sin embargo, la **versión web** surge como una **práctica personal**.
 
 ## 🧑‍💻 Proyecto original con Python (versión consola)
-El juego fue desarrollado originalmente en **Python** junto a dos amigos.
+
+El juego fue desarrollado originalmente en **Python** en colaboración **con dos amigos**.
+
 
 **Puedes encontrar la versión original del juego en el siguiente repositorio:**
 * 🔗[Repositorio de la versión en consola](https://github.com/JohnArbaiza1/Camino-de-leyendas-Juego)
