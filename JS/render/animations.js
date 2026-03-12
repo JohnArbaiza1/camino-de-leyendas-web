@@ -3,7 +3,7 @@
 // Función para generar las particulas flotantes en el fondo del juego
 export function generateSparks(){
     const sparksContainer = document.getElementById('sparks');
-    const colors = ['#c9933a', '#f0c060', '#00ff88;', '#003322', '#a080e0'];
+    const colors = ['#c9933a', '#f0c060', '#00ff88', '#003322', '#a080e0'];
 
     // Generamos una determinada cantidad de particulas
     for(let i = 0; i < 50; i++){

@@ -1,0 +1,12 @@
+/* responsive para el tablero */
+@media (max-width: 780px) {
+    .game-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "board"
+            "heroes"
+            "dice"
+            "log"
+            "legend";
+    }
+}

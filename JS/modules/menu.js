@@ -1,7 +1,6 @@
-// Acá se trabaja la logica del menú principal
+// menu.js — Lógica del menú principal: selección de jugadores y arranque del juego
 
-// importamos la función buildBoard para construir el tablero al iniciar el juego
-import { buildBoard } from './board.js';
+import { initGame } from './players.js';
 
 // Función para encargada de actualizar la visibilidad de los selcts de personajes según la cantidad seleccionda
 export function updatePlayerSelect(){
@@ -13,10 +12,10 @@ export function updatePlayerSelect(){
     for(let i = 1; i <= 4; i++){
 
         // se encarga de obtener la fila del jugador i
-        const playerRow = document.getElementById('row-player-' + i);
+        const playerRow    = document.getElementById('row-player-' + i);
 
         // obtenemos el select donde el jugador selecciona a su personaje
-        const playerSelect = document.getElementById("char" + (i - 1));
+        const playerSelect = document.getElementById('char' + (i - 1));
 
         // Verificamos si el jugador i está dentro de los parametros establecidos
         if( i <= playerCount){
@@ -36,39 +35,25 @@ export function updateCharacterOptions(){
     // obtenemos todos los selects de personajes
     const selects = document.querySelectorAll("select[id^='char']");
 
-    // obtenemos los personajes elegidos
+    // Recopila los valores ya seleccionados
     const selectedCharacters = [];
-
-    selects.forEach(select=>{
-        if(select.value){
-            selectedCharacters.push(select.value);
-        }
+    selects.forEach(select => {
+        if (select.value) selectedCharacters.push(select.value);
     });
 
-    // recorremos nuevamente los selects
-    selects.forEach(select=>{
-
-        const options = select.querySelectorAll("option");
-
-        options.forEach(option=>{
-
-            // ignoramos la opción vacía
-            if(option.value === "") return;
-
-            // si ya fue elegido lo bloqueamos
-            if(selectedCharacters.includes(option.value) && select.value !== option.value){
-                option.disabled = true;
-            }else{
-                option.disabled = false;
-            }
-
+    // Deshabilita las opciones repetidas en los demás selects
+    selects.forEach(select => {
+        select.querySelectorAll('option').forEach(option => {
+            if (option.value === '') return; // Ignora la opción vacía
+            option.disabled =
+                selectedCharacters.includes(option.value) &&
+                select.value !== option.value;
         });
-
     });
 
 }
 
-// Función encargada de iniciar el juego
+// Valida el formulario, oculta el menú y arranca el juego
 export function startGame() {
 
     // Obtiene el número de jugadores seleccionado
@@ -88,19 +73,18 @@ export function startGame() {
 
         // Si el jugador no eligió personaje
         if (!val) {
-            alert("Jugador " + (i + 1) + " debe elegir un personaje.");
-            return; // Detiene el inicio del juego
+            alert('Jugador ' + (i + 1) + ' debe elegir un personaje.');
+            return;
         }
     }
 
-    // Escondemos el menú para mostrar la pantalla de juego
+    // Oculta el menú con animación
     document.getElementById('menu-screen').classList.add('hide');
     const gameScreen = document.getElementById('game-screen');
     gameScreen.style.display = 'flex';
     setTimeout(() => gameScreen.classList.add('show'), 20);
     setTimeout(() => document.getElementById('menu-screen').style.display = 'none', 700);
 
-    // Construir tablero y preparar estado inicial
-    buildBoard();
+    initGame(count);
 }
 

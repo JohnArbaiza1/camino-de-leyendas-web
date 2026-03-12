@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="./CSS/style.css">
     <!-- estilos para el tablero-->
     <link rel="stylesheet" href="./CSS/tablero.css">
+    <!-- estilos para los otros componentes-->
+    <link rel="stylesheet" href="./CSS/others.css">
+    <!-- estilos para el responsive-->
+    <link rel="stylesheet" href="./CSS/responsive.css">
 </head>
 <body>
 
@@ -126,7 +130,6 @@
     </div>
 
     <!-- Pantalla de juego (oculta por defecto) -->
-
     <div id="game-screen">
 
         <div class="header-wrap">
@@ -135,56 +138,50 @@
                 <div class="header-ornament-diamond"></div>
                 <div class="header-ornament-line r"></div>
             </div>
-            
-            <h1>⚔️ Camino de Leyendas ⚔️ </h1>
+            <h1>⚔️ Camino de Leyendas ⚔️</h1>
             <p class="subtitle">Héroes, Magia, Trampas… ¿y Dados de la Suerte?</p>
         </div>
 
         <div class="game-wrapper">
 
-            <!-- Parte donde se estructura el Tablero -->
+            <!-- TABLERO — columna izquierda, ocupa todas las filas -->
             <div class="board-container">
                 <div class="board-frame">
                     <div id="board"></div>
                 </div>
+                <br>
+                <!-- Leyenda al pie del tablero (grid-area: legend) -->
                 <div class="legend">
                     <div class="legend-item"><div class="leg-dot" style="background:var(--bonus)"></div> Magia / Avance</div>
                     <div class="legend-item"><div class="leg-dot" style="background:var(--penalty)"></div> Maldición / Retroceso</div>
                     <div class="legend-item"><div class="leg-dot" style="background:var(--trap)"></div> Trampa</div>
                     <div class="legend-item"><div class="leg-dot" style="background:var(--skip)"></div> Turno perdido</div>
                     <div class="legend-item"><div class="leg-dot" style="background:var(--portal)"></div> Portal de los Héroes</div>
-                </div>               
-            </div>
-
-            <!-- Panel lateral -->
-            <div class="side-panel">
-                <!-- Jugadores -->
-                <div class="card">
-                    <div class="card-title">⚔ Héroes en el camino</div>
-                    <!-- Aquí se generarán dinámicamente los jugadores -->
-                    <div id="players-container"></div>
                 </div>
             </div>
 
-            <!-- Dado -->
-            <div class="card" style="text-align:center">
+            <div class="card heroes-card">
+                <div class="card-title">⚔ Héroes en el camino</div>
+                <div id="players-container"></div>
+            </div>
+
+            <div class="card dice-card">
                 <div class="card-title" style="justify-content:center">🎲 Dado Espectral</div>
                 <div id="dice">
-                <div class="dot pos-tl"     id="d-tl"></div>
-                <div class="dot"            id="d-tc" style="grid-column:2;grid-row:1"></div>
-                <div class="dot pos-tr"     id="d-tr"></div>
-                <div class="dot pos-ml"     id="d-ml"></div>
-                <div class="dot pos-center" id="d-ctr"></div>
-                <div class="dot pos-mr"     id="d-mr"></div>
-                <div class="dot pos-bl"     id="d-bl"></div>
-                <div class="dot"            id="d-bc" style="grid-column:2;grid-row:3"></div>
-                <div class="dot pos-br"     id="d-br"></div>
+                    <div class="dot pos-tl"     id="d-tl"></div>
+                    <div class="dot"            id="d-tc" style="grid-column:2;grid-row:1"></div>
+                    <div class="dot pos-tr"     id="d-tr"></div>
+                    <div class="dot pos-ml"     id="d-ml"></div>
+                    <div class="dot pos-center" id="d-ctr"></div>
+                    <div class="dot pos-mr"     id="d-mr"></div>
+                    <div class="dot pos-bl"     id="d-bl"></div>
+                    <div class="dot"            id="d-bc" style="grid-column:2;grid-row:3"></div>
+                    <div class="dot pos-br"     id="d-br"></div>
                 </div>
-                <button id="roll-btn" onclick="rollDice()">⚔ LANZAR DADOS</button>
+                <button id="roll-btn">⚔ LANZAR DADOS</button>
             </div>
 
-            <!-- Log -->
-            <div class="card">
+            <div class="card log-card">
                 <div class="card-title">📜 Crónica</div>
                 <div id="log"></div>
             </div>
@@ -194,20 +191,17 @@
         <!-- Modal ganador -->
         <div id="winner-modal">
             <div class="winner-box">
-            <span class="winner-trophy">👑</span>
-            <h2 id="winner-name">¡Victoria!</h2>
-            <p id="winner-msg">Ha alcanzado el derecho a ser una verdadera leyenda</p>
-            <div class="winner-btns">
-                <button class="winner-btn" onclick="initGame()">⚔ Nueva Aventura</button>
-                <button class="winner-btn secondary" onclick="goToMenu()">🏰 Menú</button>
-            </div>
+                <span class="winner-trophy">👑</span>
+                <h2 id="winner-name">¡Victoria!</h2>
+                <p id="winner-msg">Ha alcanzado el derecho a ser una verdadera leyenda</p>
+                <div class="winner-btns">
+                    <button class="winner-btn" onclick="initGame()">⚔ Nueva Aventura</button>
+                    <button class="winner-btn secondary" onclick="goToMenu()">🏰 Menú</button>
+                </div>
             </div>
         </div>
 
     </div>
-
-    </div>
-
 
     <script type="module" src="/JS/main.js"></script>
 </body>
