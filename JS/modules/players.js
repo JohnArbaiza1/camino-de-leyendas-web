@@ -2,7 +2,7 @@
 
 import { buildBoard, TOTAL, SPECIALS } from './board.js';
 import { mostrarCaras } from './dados.js';
-import { spawnParticle, spawnBurst } from './render/ui.js';
+import { spawnParticle, spawnBurst } from '../render/ui.js';
 
 // Configuración básica de jugadores
 export const playerColors = ['p1', 'p2', 'p3', 'p4'];

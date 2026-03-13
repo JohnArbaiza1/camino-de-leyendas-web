@@ -3,7 +3,7 @@
 // llamamos a las funciones de cada uno de los módulos para que se ejecuten al cargar la página
 import { updatePlayerSelect, startGame, updateCharacterOptions } from './modules/menu.js';
 import { generateSparks } from './render/animations.js';
-import { rollDice } from './modules/players.js';
+import { rollDice, initGame } from './modules/players.js';
 
 generateSparks();
 

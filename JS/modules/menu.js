@@ -1,7 +1,7 @@
 // menu.js — Lógica del menú principal: selección de jugadores y arranque del juego
 
 import { initGame } from './players.js';
-import { playGameIntro } from './render/gameIntro.js';
+import { playGameIntro } from '../render/gameIntro.js';
 
 // Función para encargada de actualizar la visibilidad de los selcts de personajes según la cantidad seleccionda
 export function updatePlayerSelect(){
