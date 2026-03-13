@@ -126,7 +126,8 @@ h1 {
     font-family: 'Crimson Text', serif;
     font-style: italic;
     font-size: 0.7rem;
-    color: var(--text-dim);
+    color: var(--parchment);
+    font-weight: 500;
     padding: 8px 12px;
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(0,255,136,0.08);

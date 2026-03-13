@@ -84,10 +84,10 @@
 .card {
     position: relative;
     background: rgba(0,255,136,0.03);
-    border: 1px solid var(--border);
+    border: 1px solid var(--gold-dim);
     border-radius: 4px;
     padding: 14px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(18, 109, 98, 0.34);
     backdrop-filter: blur(8px);
 }
 
@@ -170,7 +170,7 @@
     font-family: 'Crimson Text', serif;
     font-style: italic;
     font-size: 0.68rem;
-    color: var(--silver-dim);
+    color: var(--parchment); 
     white-space: nowrap;
 }
 
@@ -255,15 +255,20 @@
 .log-entry {
     font-family: 'Crimson Text', serif;
     font-style: italic;
-    font-size: 0.78rem;
-    color: var(--text-dim);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--parchment); 
     padding: 4px 0;
     border-bottom: 1px solid rgba(0,255,136,0.05);
     line-height: 1.5;
 }
 
 .log-entry:last-child { border-bottom: none; }
-.log-entry b { font-style: normal; color: var(--green); }
+.log-entry b { 
+    font-style: normal;
+    color: var(--green);
+    font-weight: 800;
+}
 
 /* MODAL GANADOR */
 #winner-modal {
@@ -343,6 +348,12 @@
     font-size: 0.95rem;
 }
 
+#winner-mensaje{
+    color: var(--parchment);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
 .winner-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
 .winner-btn {
@@ -367,4 +378,60 @@
     border: 1px solid var(--border);
     color: var(--text-dim);
     box-shadow: none;
+}
+
+/*  TOAST — notificación de casilla especial */
+.special-toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    opacity: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--bg-deep);
+    border: 1px solid var(--toast-color, var(--green));
+    border-radius: 4px;
+    /* Se evita color-mix() por compatibilidad — se usa rgba fijo para la sombra */
+    box-shadow: 0 0 20px rgba(0,0,0,0.6), 0 8px 32px rgba(0,0,0,0.7);
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    min-width: 260px;
+    max-width: 380px;
+}
+
+.special-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-emoji {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.toast-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.toast-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--toast-color, var(--green));
+    text-transform: uppercase;
+}
+
+.toast-desc {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--parchment);   
 }

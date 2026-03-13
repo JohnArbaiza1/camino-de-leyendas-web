@@ -10,6 +10,15 @@ export const defaultNames = ['Guerrero/a', 'Mago/a', 'Arquero/a', 'Explorador/a'
 export const playerEmojis = ['🛡️', '🧙', '🏹', '🧭'];
 export const trailColors  = ['#00ff88', '#f0c060', '#ff3366', '#c9933a'];
 
+// Configuración visual de cada tipo de casilla especial para el toast
+const SPECIAL_TOAST = {
+    bonus:   { emoji: '✨', color: '#00ff88', prefix: '¡Magia!',     suffix: 'avanza'           },
+    penalty: { emoji: '☠️', color: '#cc2222', prefix: '¡Maldición!', suffix: 'retrocede'        },
+    trap:    { emoji: '🕸️', color: '#c9933a', prefix: '¡Trampa!',    suffix: 'pierde turno'     },
+    skip:    { emoji: '🧊', color: '#00aaff', prefix: '¡Congelado!', suffix: 'pierde turno'     },
+    portal:  { emoji: '🌀', color: '#7b4fe0', prefix: '¡Portal!',    suffix: 'teletransportado' },
+};
+
 // Variables de estado
 export let playerNames   = [...defaultNames]; // copia de los nombres para poder modificarlos
 export let state         = {};                // aquí se guardará todo el estado del juego
@@ -27,6 +36,10 @@ export function initGame(count = 4){
         rolling   : false                 // semáforo para evitar doble-click en el dado
     };
 
+    // Limpia el log al iniciar partida nueva
+    const log = document.getElementById('log');
+    if (log) log.innerHTML = '';
+
     // Genera el HTML de jugadores dinámicamente solo para los activos
     const container = document.getElementById('players-container');
     container.innerHTML = '';
@@ -40,6 +53,9 @@ export function initGame(count = 4){
             </div>
         `;
     }
+
+    // Resalta al primer jugador
+    highlightCurrentPlayer();
 }
 
 // Función que ejecuta el turno completo: tirada, movimiento y efecto de casilla especial
@@ -50,12 +66,22 @@ export async function rollDice() {
     state.rolling = true;
 
     const p = state.current;
+    const name = playerNames[p];
 
-    // Si el jugador tiene turnos penalizados, los consume y pasa el turno
+    // Turno penalizado — consume el skip y pasa al siguiente
     if (state.skipTurns[p] > 0) {
         state.skipTurns[p]--;
+        addLog(`${playerEmojis[p]} <b>${name}</b> pierde su turno. (${state.skipTurns[p]} restantes)`);
         nextTurn();
         return;
+    }
+
+    // Animación de giro del dado
+    const diceEl = document.getElementById('dice');
+    if (diceEl) {
+        diceEl.classList.add('rolling');
+        await delay(650);
+        diceEl.classList.remove('rolling');
     }
 
     // Genera un número entre 1 y 6
@@ -76,22 +102,40 @@ export async function rollDice() {
     const posLabel = document.getElementById(`pp${p}`);
     if (posLabel) posLabel.textContent = `Casilla ${newPos}`;
 
+    // Verifica victoria 
+    if (newPos >= TOTAL) {
+        addLog(`🏆 <b>${name}</b> ¡ha llegado a la meta! ¡VICTORIA!`);
+        showWinner(p);
+        state.rolling = false;
+        return; // no pasa turno, el juego termina
+    }
+
     // Aplica el efecto de la casilla especial si existe
     const sp = SPECIALS[newPos];
 
     if (sp) {
         if (sp.teleport) {
-            // Teletransporta al jugador a otra casilla
+            addLog(`🌀 <b>${name}</b> cae en <i>${sp.nombre}</i> — teletransportado a casilla ${sp.teleport}`);
+            showToast(sp, p);
+            await delay(400);
             await animateMove(p, newPos, sp.teleport);
             state.positions[p] = sp.teleport;
+            if (posLabel) posLabel.textContent = `Casilla ${sp.teleport}`;
+
         } else if (sp.move && sp.move !== 0) {
-            // Avanza o retrocede al jugador
-            const dest = newPos + sp.move;
+            const dest = Math.max(1, Math.min(newPos + sp.move, TOTAL));
+            const dir  = sp.move > 0 ? `avanza ${sp.move}` : `retrocede ${Math.abs(sp.move)}`;
+            addLog(`${sp.emoji} <b>${name}</b> cae en <i>${sp.nombre}</i> — ${dir} → casilla ${dest}`);
+            showToast(sp, p);
+            await delay(400);
             await animateMove(p, newPos, dest);
             state.positions[p] = dest;
+            if (posLabel) posLabel.textContent = `Casilla ${dest}`;
+
         } else if (sp.skip) {
-            // Penaliza con turnos perdidos
             state.skipTurns[p] += sp.skip;
+            addLog(`${sp.emoji} <b>${name}</b> cae en <i>${sp.nombre}</i> — pierde ${sp.skip} turno(s)`);
+            showToast(sp, p);
         }
     }
 
@@ -102,6 +146,67 @@ export async function rollDice() {
 function nextTurn() {
     state.current = (state.current + 1) % numPlayers;
     state.rolling  = false;
+    highlightCurrentPlayer();
+}
+
+// Marca con la clase 'active' la fila del jugador que tiene el turno actual
+function highlightCurrentPlayer() {
+    for (let p = 0; p < numPlayers; p++) {
+        const row = document.getElementById(`player-row-${p}`);
+        if (!row) continue;
+        row.classList.toggle('active', p === state.current);
+    }
+}
+
+// Rellena y muestra el modal de victoria
+function showWinner(p) {
+    const modal  = document.getElementById('winner-modal');
+    const nameEl = document.getElementById('winner-name');
+    const msgEl  = document.getElementById('winner-msg');
+
+    if (!modal) return;
+    if (nameEl) nameEl.textContent = `¡${playerNames[p]} gana!`;
+    if (msgEl)  msgEl.textContent  = `${playerEmojis[p]} Ha llegado a la meta y será recordado como una verdadera leyenda.`;
+
+    modal.classList.add('show');
+}
+
+// Notificación flotante que aparece al caer en casilla especial
+function showToast(sp, p) {
+    const cfg = SPECIAL_TOAST[sp.type];
+    if (!cfg) return;
+
+    const el = document.createElement('div');
+    el.className = 'special-toast';
+    el.innerHTML = `
+        <span class="toast-emoji">${sp.emoji}</span>
+        <div class="toast-body">
+            <div class="toast-title">${sp.nombre}</div>
+            <div class="toast-desc">${cfg.prefix} — ${playerEmojis[p]} ${playerNames[p]} ${cfg.suffix}</div>
+        </div>
+    `;
+    el.style.setProperty('--toast-color', cfg.color);
+    document.body.appendChild(el);
+
+    // Entrada con pequeño delay para que la transición CSS sea visible
+    requestAnimationFrame(() => el.classList.add('visible'));
+
+    // Auto-cierre a los 3 segundos
+    setTimeout(() => {
+        el.classList.remove('visible');
+        setTimeout(() => el.remove(), 400);
+    }, 3000);
+}
+
+// Añade una línea al log de la crónica y hace scroll al último mensaje
+function addLog(html) {
+    const log = document.getElementById('log');
+    if (!log) return;
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = html;
+    log.appendChild(entry);
+    log.scrollTop = log.scrollHeight;
 }
 
 // Mueve la ficha del jugador casilla por casilla con una pequeña pausa entre pasos

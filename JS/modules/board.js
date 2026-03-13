@@ -8,7 +8,7 @@ export const SPECIALS = {
     5:  { type: 'bonus',   nombre: 'Magia Brillante',      emoji: '✨', move:  3, skip: 0 },
     9:  { type: 'penalty', nombre: 'Hechizo del Mago',     emoji: '🧙', move: -3, skip: 0 },
     12: { type: 'bonus',   nombre: 'Bendición Estelar',    emoji: '🌟', move:  4, skip: 0 },
-    14: { type: 'bonus',   nombre: 'Hechizo Arcano',       emoji: '🪄', move:  3, skip: 0 },
+    14: { type: 'bonus',   nombre: 'Poder de los Antiguos',emoji: '🪄', move:  3, skip: 0 },
     18: { type: 'skip',    nombre: 'Congelado por Hielo',  emoji: '🧊', move:  0, skip: 1 },
     20: { type: 'trap',    nombre: 'Telaraña Gigante',     emoji: '🕸️', move:  0, skip: 1 },
     22: { type: 'penalty', nombre: 'Maldición Oscura',     emoji: '☠️', move: -5, skip: 0 },
@@ -17,7 +17,7 @@ export const SPECIALS = {
     31: { type: 'trap',    nombre: 'Pozo Olvidado',        emoji: '🕳️', move: -3, skip: 0 },
     33: { type: 'skip',    nombre: 'Aturdido por Hechizo', emoji: '😵', move:  0, skip: 1 },
     35: { type: 'penalty', nombre: 'Abismo de Serpientes', emoji: '🐍', move: -4, skip: 0 },
-    37: { type: 'portal',  nombre: 'Portal Arcano',        emoji: '🌀', move:  0, skip: 0, teleport: 15 },
+    37: { type: 'portal',  nombre: 'Portal de la perdición',        emoji: '🌀', move:  0, skip: 0, teleport: 15 },
 };
 
 export function buildBoard() {
