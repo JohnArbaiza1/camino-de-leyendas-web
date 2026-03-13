@@ -1,4 +1,7 @@
-// Acá se trabaja la logica del menú principal
+// menu.js — Lógica del menú principal: selección de jugadores y arranque del juego
+
+import { initGame } from './players.js';
+import { playGameIntro } from '../render/gameIntro.js';
 
 // Función para encargada de actualizar la visibilidad de los selcts de personajes según la cantidad seleccionda
 export function updatePlayerSelect(){
@@ -10,10 +13,10 @@ export function updatePlayerSelect(){
     for(let i = 1; i <= 4; i++){
 
         // se encarga de obtener la fila del jugador i
-        const playerRow = document.getElementById('row-player-' + i);
+        const playerRow    = document.getElementById('row-player-' + i);
 
         // obtenemos el select donde el jugador selecciona a su personaje
-        const playerSelect = document.getElementById("char" + (i - 1));
+        const playerSelect = document.getElementById('char' + (i - 1));
 
         // Verificamos si el jugador i está dentro de los parametros establecidos
         if( i <= playerCount){
@@ -27,7 +30,31 @@ export function updatePlayerSelect(){
     }
 }
 
-// Función encargada de iniciar el juego
+// Función que evita que se repitan personajes
+export function updateCharacterOptions(){
+
+    // obtenemos todos los selects de personajes
+    const selects = document.querySelectorAll("select[id^='char']");
+
+    // Recopila los valores ya seleccionados
+    const selectedCharacters = [];
+    selects.forEach(select => {
+        if (select.value) selectedCharacters.push(select.value);
+    });
+
+    // Deshabilita las opciones repetidas en los demás selects
+    selects.forEach(select => {
+        select.querySelectorAll('option').forEach(option => {
+            if (option.value === '') return; // Ignora la opción vacía
+            option.disabled =
+                selectedCharacters.includes(option.value) &&
+                select.value !== option.value;
+        });
+    });
+
+}
+
+// Valida el formulario, oculta el menú y arranca el juego
 export function startGame() {
 
     // Obtiene el número de jugadores seleccionado
@@ -47,12 +74,27 @@ export function startGame() {
 
         // Si el jugador no eligió personaje
         if (!val) {
-            alert("Jugador " + (i + 1) + " debe elegir un personaje.");
-            return; // Detiene el inicio del juego
+            alert('Jugador ' + (i + 1) + ' debe elegir un personaje.');
+            return;
         }
     }
 
-    // Si todo está correcto se inicia el juego (alerta de momento para ver que funcione)
-    alert("¡La aventura comienza!");
+    // Oculta el menú con animación
+    document.getElementById('menu-screen').classList.add('hide');
+    const gameScreen = document.getElementById('game-screen');
+    gameScreen.style.display = 'flex';
+    // Inicializa el juego antes de la animación para que las casillas existan
+    initGame(count);
+
+    // Pequeño delay para que el display:flex surta efecto antes de animar
+    setTimeout(() => {
+        gameScreen.classList.add('show');
+        //  Lanza la animación temática de entrada
+        playGameIntro();
+    }, 40);
+
+    setTimeout(() => {
+        document.getElementById('menu-screen').style.display = 'none';
+    }, 700);
 }
 

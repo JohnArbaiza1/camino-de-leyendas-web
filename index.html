@@ -7,9 +7,17 @@
 
     <!-- llamando a las fuentes a utilizar-->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
     <!-- llamando a los estilos para el juego-->
+    
+    <!-- estilos de la pantalla principal y menu-->
     <link rel="stylesheet" href="./CSS/style.css">
-
+    <!-- estilos para el tablero-->
+    <link rel="stylesheet" href="./CSS/tablero.css">
+    <!-- estilos para los otros componentes-->
+    <link rel="stylesheet" href="./CSS/others.css">
+    <!-- estilos para el responsive-->
+    <link rel="stylesheet" href="./CSS/responsive.css">
 </head>
 <body>
 
@@ -69,9 +77,10 @@
                     <div class="select-wrapper">
                         <select id="char0">
                             <option value="">— Elige un personaje —</option>
-                            <option value="guerrero">⚔️  Guerrero/a</option>
-                            <option value="mago">🔮  Mago/a</option>
-                            <option value="arqueiro">🏹  Arquero/a</option>
+                            <option value="guerrero">⚔️ Guerrero/a</option>
+                            <option value="mago">🔮 Mago/a</option>
+                            <option value="arquero">🏹 Arquero/a</option>
+                            <option value="picaro">🧭 Explorador/a</option>
                         </select>
                     </div>
                 </div>
@@ -81,9 +90,10 @@
                     <div class="select-wrapper">
                         <select id="char1">
                             <option value="">— Elige un personaje —</option>
-                            <option value="guerrero">⚔️  Guerrero/a</option>
-                            <option value="mago">🔮  Mago/a</option>
-                            <option value="arqueiro">🏹  Arquero/a</option>
+                            <option value="guerrero">⚔️ Guerrero/a</option>
+                            <option value="mago">🔮 Mago/a</option>
+                            <option value="arquero">🏹 Arquero/a</option>
+                            <option value="picaro">🧭 Explorador/a</option>
                         </select>
                     </div>
                 </div>
@@ -93,9 +103,10 @@
                     <div class="select-wrapper">
                         <select id="char2">
                             <option value="">— Elige un personaje —</option>
-                            <option value="guerrero">⚔️  Guerrero/a</option>
-                            <option value="mago">🔮  Mago/a</option>
-                            <option value="arqueiro">🏹  Arquero/a</option>
+                            <option value="guerrero">⚔️ Guerrero/a</option>
+                            <option value="mago">🔮 Mago/a</option>
+                            <option value="arquero">🏹 Arquero/a</option>
+                            <option value="picaro">🧭 Explorador/a</option>
                         </select>
                     </div>
                 </div>
@@ -105,12 +116,13 @@
                     <div class="select-wrapper">
                         <select id="char3">
                             <option value="">— Elige un personaje —</option>
-                            <option value="guerrero">⚔️  Guerrero/a</option>
-                            <option value="mago">🔮  Mago/a</option>
-                            <option value="arqueiro">🏹  Arquero/a</option>
+                            <option value="guerrero">⚔️ Guerrero/a</option>
+                            <option value="mago">🔮 Mago/a</option>
+                            <option value="arquero">🏹 Arquero/a</option>
+                            <option value="picaro">🧭 Explorador/a</option>
                         </select>
                     </div>
-                </div>        
+                </div>      
 
                 <button class="btn-start"> Comenzar la Aventura </button>
             </div>
@@ -118,11 +130,78 @@
     </div>
 
     <!-- Pantalla de juego (oculta por defecto) -->
-    <!-- <div id="game-screen">
-        <h1 class="board-title">✦ Camino de Leyendas ✦</h1>
-        <p class="board-subtitle">— El Tablero Sagrado —</p>
-    </div> -->
+    <div id="game-screen">
 
+        <div class="header-wrap">
+            <div class="header-ornament">
+                <div class="header-ornament-line"></div>
+                <div class="header-ornament-diamond"></div>
+                <div class="header-ornament-line r"></div>
+            </div>
+            <h1>⚔️ Camino de Leyendas ⚔️</h1>
+            <p class="subtitle">Héroes, Magia, Trampas… ¿y Dados de la Suerte?</p>
+        </div>
+
+        <div class="game-wrapper">
+
+            <!-- TABLERO — columna izquierda, ocupa todas las filas -->
+            <div class="board-container">
+                <div class="board-frame">
+                    <div id="board"></div>
+                </div>
+                <br>
+                <!-- Leyenda al pie del tablero (grid-area: legend) -->
+                <div class="legend">
+                    <div class="legend-item"><div class="leg-dot" style="background:var(--bonus)"></div> Magia / Avance</div>
+                    <div class="legend-item"><div class="leg-dot" style="background:var(--penalty)"></div> Maldición / Retroceso</div>
+                    <div class="legend-item"><div class="leg-dot" style="background:var(--trap)"></div> Trampa</div>
+                    <div class="legend-item"><div class="leg-dot" style="background:var(--skip)"></div> Turno perdido</div>
+                    <div class="legend-item"><div class="leg-dot" style="background:var(--portal)"></div> Portal de los Héroes</div>
+                </div>
+            </div>
+
+            <div class="card heroes-card">
+                <div class="card-title">⚔ Héroes en el camino</div>
+                <div id="players-container"></div>
+            </div>
+
+        <div class="card dice-card">
+            <div class="card-title" style="justify-content:center">🎲 Dado Espectral</div>
+            <div id="dice">
+                <div class="dot pos-tl"     id="d-tl"></div>
+                <div class="dot"            id="d-tc" style="grid-column:2;grid-row:1"></div>
+                <div class="dot pos-tr"     id="d-tr"></div>
+                <div class="dot pos-ml"     id="d-ml"></div>
+                <div class="dot pos-center" id="d-ctr"></div>
+                <div class="dot pos-mr"     id="d-mr"></div>
+                <div class="dot pos-bl"     id="d-bl"></div>
+                <div class="dot"            id="d-bc" style="grid-column:2;grid-row:3"></div>
+                <div class="dot pos-br"     id="d-br"></div>
+            </div>
+            <button id="roll-btn">⚔ LANZAR DADOS</button>
+        </div>
+
+            <div class="card log-card">
+                <div class="card-title">📜 Crónica</div>
+                <div id="log"></div>
+            </div>
+
+        </div>
+
+        <!-- Modal ganador -->
+        <div id="winner-modal">
+            <div class="winner-box">
+                <span class="winner-trophy">👑</span>
+                <h2 id="winner-name">¡Victoria!</h2>
+                <p id="winner-mensaje">Ha alcanzado el derecho a ser una verdadera leyenda</p>
+                <div class="winner-btns">
+                    <button class="winner-btn" id="btn-new-game">⚔ Nueva Aventura</button>
+                    <button class="winner-btn secondary" id="btn-go-menu">🏰 Menú</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <script type="module" src="/JS/main.js"></script>
 </body>

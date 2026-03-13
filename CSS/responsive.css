@@ -1,0 +1,168 @@
+/* responsive.css — Estilos adaptativos */
+@import url('colors.css');
+
+/* TABLET ≤ 780px — todo en una sola columna */
+@media (max-width: 780px) {
+ 
+    body { overflow-y: auto; }
+ 
+    #game-screen {
+        padding: 12px;
+        align-items: stretch;
+    }
+ 
+    /* Una sola columna, el dado queda debajo del tablero junto al resto */
+    .game-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "board"
+            "dice"
+            "heroes"
+            "log"
+            "legend";
+        gap: 12px;
+    }
+ 
+    /* El dado vuelve al flujo normal — nunca flotante en tablet */
+    .card.dice-card {
+        position: static !important;
+        width: 100%;
+        text-align: center;
+        grid-area: dice;
+    }
+ 
+    .header-ornament-line { width: 100px; }
+    .subtitle { font-size: 0.85rem; }
+}
+
+/*  MÓVIL ≤ 520px —  */
+@media (max-width: 520px) {
+ 
+    body { overflow-y: auto; }
+ 
+    #game-screen { padding: 8px 6px; }
+ 
+    h1 { font-size: clamp(0.85rem, 5vw, 1.3rem); letter-spacing: 0.5px; }
+    .subtitle { display: none; }
+    .header-ornament-line { width: 50px; }
+    .header-wrap { margin-bottom: 8px; }
+ 
+    /* Tablero compacto */
+    .board-frame { padding: 5px; }
+    #board { gap: 2px; padding: 3px; }
+    .cell .cell-label { display: none; }
+    .cell .num        { font-size: 0.4rem; }
+    .cell .cell-icon  { font-size: 0.6rem; }
+ 
+    /* Dado pequeño en su lugar normal del grid */
+    .card.dice-card {
+        position: static !important;
+        grid-area: dice;
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+ 
+    #dice {
+        width: 54px;
+        height: 54px;
+        padding: 7px;
+        margin: 0 auto 10px;
+    }
+ 
+    #roll-btn {
+        font-size: 0.65rem;
+        padding: 8px 6px;
+        letter-spacing: 0.5px;
+    }
+ 
+    /* Héroes compacto */
+    .heroes-card { padding: 10px; }
+    .player-row  { padding: 5px 6px; margin-bottom: 3px; }
+    .player-name { font-size: 0.65rem; }
+    .player-pos  { font-size: 0.6rem; }
+ 
+    /* Log más corto */
+    #log       { max-height: 100px; }
+    .log-entry { font-size: 0.7rem; }
+ 
+    /* Leyenda más compacta */
+    .legend {
+        font-size: 0.6rem;
+        gap: 4px 8px;
+        padding: 6px 8px;
+    }
+ 
+    /* Toast compacto */
+    .special-toast {
+        top: 10px;
+        min-width: 180px;
+        max-width: calc(100vw - 24px);
+        padding: 9px 12px;
+        gap: 8px;
+    }
+    .toast-emoji { font-size: 1.3rem; }
+    .toast-title { font-size: 0.68rem; }
+    .toast-desc  { font-size: 0.7rem; }
+ 
+    /* Modal ganador compacto */
+    .winner-box   { padding: 28px 20px; margin: 16px; }
+    .winner-trophy { font-size: 2.6rem; }
+    .winner-box h2 { font-size: 1.1rem; }
+    .winner-box p  { font-size: 0.83rem; margin-bottom: 14px; }
+    .winner-btn    { padding: 8px 14px; font-size: 0.7rem; }
+}
+
+/* MÓVIL PEQUEÑO ≤ 380px */
+@media (max-width: 380px) {
+ 
+    .board-frame { padding: 3px; }
+    #board       { gap: 1px; padding: 2px; }
+ 
+    #dice {
+        width: 46px;
+        height: 46px;
+        padding: 6px;
+        margin-bottom: 8px;
+    }
+ 
+    #roll-btn { font-size: 0.55rem; padding: 6px 4px; }
+ 
+    h1 { font-size: clamp(0.75rem, 4.5vw, 1rem); }
+    .player-name { font-size: 0.6rem; }
+    .player-pos  { font-size: 0.55rem; }
+}
+/* MENÚ responsivo ≤ 520px */
+@media (max-width: 520px) {
+ 
+    #menu-screen { padding: 14px 12px; }
+ 
+    .menu-title {
+        font-size: clamp(1rem, 6vw, 1.7rem);
+        line-height: 1.2;
+    }
+ 
+    .menu-subtitle {
+        font-size: 0.82rem;
+        margin-bottom: 20px;
+    }
+ 
+    .menu-card { padding: 18px 14px; }
+ 
+    .menu-card h2 {
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+        margin-bottom: 14px;
+    }
+ 
+    .ornament-line { width: 70px; }
+ 
+    .player-label { font-size: 0.72rem; letter-spacing: 1px; }
+ 
+    .select-wrapper select {
+        font-size: 0.8rem;
+        padding: 8px 12px 8px 14px;
+    }
+ 
+    .btn-start { font-size: 0.82rem; padding: 11px; }
+}

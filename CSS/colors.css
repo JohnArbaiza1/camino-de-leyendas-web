@@ -4,6 +4,7 @@
     --bg-deep:      #05030a;           /* fondo más profundo para contraste */
     --bg-mid:       #0c0818;           /* fondo intermedio paneles grandes */
     --grid-bg:      #0d1117;           /* tablero casillas neutras */
+    --stone:       #16130E;
     --panel-bg:     rgba(0,255,136,0.04); /* paneles o overlays suaves */
 
     /* Verde principal y variantes */
@@ -37,5 +38,18 @@
     /* Otros neutros / secundarios */
     --silver:       #c8c8d8;           /* texto neutro, paneles secundarios */
     --silver-dim:   #7a7a90;
-    --parchment:    #e8dfc0;           /* fondo de cartas */
+    --parchment:    #e8dfc0;  
+    
+    /* Colores para jugadores  */
+    --p1:           var(--green);       
+    --p2:           var(--gold);        
+    --p3:           var(--food);        
+    --p4:           var(--crimson);     
+
+    /* Colores para tipos de casilla — armonizados con paleta */
+    --bonus:        var(--green);       
+    --penalty:      var(--crimson);     
+    --trap:         var(--gold);        
+    --portal:       #7b4fe0;            
+    --skip:         var(--green-dim);  
 }

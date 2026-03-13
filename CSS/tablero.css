@@ -1,0 +1,433 @@
+/* Colors import */
+@import url('colors.css');
+
+/*  Pantalla de Juego */
+#game-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    opacity: 0;
+    transform: scale(0.97);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    position: relative;
+    z-index: 10;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#game-screen.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Cabecera */
+.header-wrap {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.header-ornament {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+.header-ornament-line {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green-dim));
+}
+
+.header-ornament-line.r {
+    background: linear-gradient(90deg, var(--green-dim), transparent);
+}
+
+.header-ornament-diamond {
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    transform: rotate(45deg);
+    box-shadow: 0 0 8px var(--green);
+}
+
+h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 4vw, 2.6rem);
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--gold), var(--green), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(0,255,136,0.5));
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--parchment);
+    letter-spacing: 1px;
+}
+
+/* 
+   LAYOUT PRINCIPAL DEL JUEGO
+   Estructura: tablero a la izquierda | panel a la derecha */
+.game-wrapper {
+    display: grid;
+    /* columna izquierda: tablero flexible | columna derecha: panel fijo de 260px */
+    grid-template-columns: 1fr 260px;
+    grid-template-rows: auto;
+    /* áreas nombradas para posicionar cada sección */
+    grid-template-areas:
+        "board  heroes"
+        "board  dice"
+        "board  log"
+        "legend legend";
+    gap: 16px;
+    width: 100%;
+    max-width: 1100px;
+    align-items: start;
+}
+
+/* Tablero (ocupa toda la columna izquierda)  */
+.board-container {
+    grid-area: board;
+    min-width: 0; /* evita desbordamiento en grids */
+}
+
+/*  Panel de héroes  */
+.card.heroes-card {
+    grid-area: heroes;
+}
+
+/*  Card del dado  */
+.card.dice-card {
+    grid-area: dice;
+    text-align: center;
+}
+
+/* Crónica / log  */
+.card.log-card {
+    grid-area: log;
+}
+
+/* Leyenda (ocupa todo el ancho abajo del tablero) */
+.legend {
+    grid-area: legend;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+    justify-content: center;
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: var(--parchment);
+    font-weight: 500;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(0,255,136,0.08);
+    border-radius: 3px;
+}
+
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.leg-dot { width: 8px; height: 8px; border-radius: 1px; flex-shrink: 0; }
+
+/*  Marco del tablero  */
+.board-frame {
+    position: relative;
+    padding: 16px;
+    background: linear-gradient(145deg, #0a0f0d 0%, #060c0a 60%, #0a0c08 100%);
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    box-shadow:
+        0 0 0 1px rgba(0,255,136,0.08),
+        0 0 30px rgba(201,147,58,0.15),
+        0 0 80px rgba(0,255,136,0.08),
+        inset 0 0 40px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(201,147,58,0.2);
+}
+
+/* Esquinas decorativas doradas del marco */
+.board-frame::before,
+.board-frame::after {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: var(--gold);
+    border-style: solid;
+    opacity: 0.7;
+}
+
+.board-frame::before {
+    top: 6px; left: 6px;
+    border-width: 2px 0 0 2px;
+    box-shadow: -2px -2px 8px rgba(201,147,58,0.3);
+}
+
+.board-frame::after {
+    bottom: 6px; right: 6px;
+    border-width: 0 2px 2px 0;
+    box-shadow: 2px 2px 8px rgba(201,147,58,0.3);
+}
+
+/*  Rejilla del tablero  */
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    border-radius: 3px;
+    padding: 8px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(0,255,136,0.025) 0px,
+            transparent 1px,
+            transparent 40px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,255,136,0.025) 0px,
+            transparent 1px,
+            transparent 40px
+        ),
+        #060c09;
+    border: 1px solid rgba(0,255,136,0.12);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+/*  Casillas base  */
+.cell {
+    aspect-ratio: 1;
+    border-radius: 3px;
+    background: linear-gradient(135deg, rgba(0,255,136,0.03) 0%, rgba(0,0,0,0.4) 100%);
+    border: 1px solid rgba(0,255,136,0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--silver);
+    font-size: 12px;
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+}
+
+.cell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,255,136,0.04) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.cell:hover {
+    transform: scale(1.1);
+    z-index: 10;
+    border-color: rgba(0,255,136,0.5);
+    box-shadow:
+        0 0 14px rgba(0,255,136,0.35),
+        inset 0 0 8px rgba(0,255,136,0.1);
+    background: linear-gradient(135deg, rgba(0,255,136,0.1) 0%, rgba(0,20,10,0.6) 100%);
+}
+
+.cell .num {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    color: var(--gold-light);
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    line-height: 1;
+    z-index: 2;
+}
+
+/*  Casillas especiales  */
+.cell.start {
+    background: linear-gradient(135deg, rgba(0,255,136,0.18) 0%, rgba(0,40,20,0.85) 100%);
+    border: 1px solid var(--green);
+    box-shadow: 0 0 16px rgba(0,255,136,0.3), inset 0 0 12px rgba(0,255,136,0.12), inset 0 1px 0 rgba(0,255,136,0.4);
+}
+
+.cell.finish {
+    background: linear-gradient(135deg, rgba(201,147,58,0.28) 0%, rgba(80,45,5,0.85) 100%);
+    border: 1px solid var(--gold);
+    box-shadow: 0 0 20px rgba(201,147,58,0.4), inset 0 0 14px rgba(201,147,58,0.15), inset 0 1px 0 rgba(240,192,96,0.4);
+    animation: pulseFinish 2s ease-in-out infinite;
+}
+
+.cell.bonus {
+    background: linear-gradient(135deg, rgba(0,255,136,0.1) 0%, rgba(0,30,15,0.7) 100%);
+    border: 1px solid var(--green-dim);
+    box-shadow: 0 0 10px rgba(0,255,136,0.2), inset 0 0 8px rgba(0,255,136,0.08);
+}
+
+.cell.penalty {
+    background: linear-gradient(135deg, rgba(204,34,34,0.2) 0%, rgba(60,5,5,0.8) 100%);
+    border: 1px solid var(--crimson-glow);
+    box-shadow: 0 0 12px rgba(204,34,34,0.25), inset 0 0 10px rgba(204,34,34,0.15);
+}
+
+.cell.trap {
+    background: linear-gradient(135deg, rgba(201,147,58,0.18) 0%, rgba(60,30,5,0.75) 100%);
+    border: 1px solid var(--gold-dim);
+    box-shadow: 0 0 10px rgba(201,147,58,0.2), inset 0 0 8px rgba(201,147,58,0.1);
+}
+
+.cell.skip {
+    background: linear-gradient(135deg, rgba(0,170,255,0.15) 0%, rgba(0,20,50,0.75) 100%);
+    border: 1px solid rgba(0,170,255,0.45);
+    box-shadow: 0 0 10px rgba(0,170,255,0.2), inset 0 0 8px rgba(0,170,255,0.1);
+}
+
+.cell.portal {
+    background: linear-gradient(135deg, rgba(123,79,224,0.25) 0%, rgba(30,10,70,0.8) 100%);
+    border: 1px solid var(--portal);
+    box-shadow: 0 0 16px rgba(123,79,224,0.35), inset 0 0 10px rgba(123,79,224,0.15);
+    animation: pulsePortal 2.5s ease-in-out infinite;
+}
+
+/*  Animaciones  */
+@keyframes pulseFinish {
+    0%, 100% { box-shadow: 0 0 20px rgba(201,147,58,0.4), inset 0 0 14px rgba(201,147,58,0.15); border-color: var(--gold); }
+    50%       { box-shadow: 0 0 40px rgba(240,192,96,0.6), inset 0 0 20px rgba(201,147,58,0.25); border-color: var(--gold-light); }
+}
+
+@keyframes pulsePortal {
+    0%, 100% { box-shadow: 0 0 16px rgba(123,79,224,0.35), inset 0 0 10px rgba(123,79,224,0.15); }
+    50%       { box-shadow: 0 0 30px rgba(123,79,224,0.6),  inset 0 0 16px rgba(123,79,224,0.25); }
+}
+
+/* RESPONSIVO — tablet (≤ 780px)
+   Panel lateral baja debajo del tablero en columna*/
+@media (max-width: 780px) {
+    #game-screen { padding: 12px; }
+ 
+    .game-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "board"
+            "heroes"
+            "dice"
+            "log"
+            "legend";
+        gap: 12px;
+    }
+}
+ 
+/* RESPONSIVO — móvil (≤ 520px)
+   Dado flotante sobre el tablero, panel compacto */
+@media (max-width: 520px) {
+    #game-screen { padding: 8px; }
+ 
+    h1      { letter-spacing: 1px; }
+    .subtitle { display: none; }       /* oculta subtítulo para ganar espacio */
+ 
+    .header-ornament-line { width: 80px; }
+    .header-wrap { margin-bottom: 10px; }
+ 
+    /* El tablero ocupa todo el ancho con posición relative
+       para que el dado flotante se ancle a él */
+    .board-container {
+        position: relative;
+    }
+ 
+    .board-frame { padding: 8px; }
+ 
+    /* Casillas más compactas en móvil */
+    .cell .num          { font-size: 0.45rem; }
+    .cell .cell-icon    { font-size: 0.7rem;  }
+    .cell .cell-label   { display: none; }     /* oculta etiquetas de texto en celdas */
+ 
+
+    .dice-card {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        z-index: 50;
+        width: auto;
+        min-width: 0;
+        padding: 8px 10px;
+        background: rgba(5, 14, 8, 0.96);
+        backdrop-filter: blur(12px);
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        box-shadow:
+            0 0 16px rgba(0,255,136,0.15),
+            0 4px 24px rgba(0,0,0,0.8);
+    }
+ 
+    .dice-card .card-title { display: none; }
+ 
+    /* Dado más pequeño */
+    #dice {
+        width: 52px;
+        height: 52px;
+        padding: 7px;
+        margin-bottom: 8px;
+    }
+ 
+    /* Botón más compacto */
+    #roll-btn {
+        font-size: 0.6rem;
+        padding: 7px 6px;
+        letter-spacing: 1px;
+    }
+ 
+    /* Panel de héroes horizontal en móvil */
+    .heroes-card {
+        padding: 10px 12px;
+    }
+ 
+    .player-row {
+        padding: 5px 6px;
+        margin-bottom: 3px;
+    }
+ 
+    .player-name { font-size: 0.65rem; }
+    .player-pos  { font-size: 0.6rem;  }
+ 
+    /* Log más corto */
+    #log { max-height: 100px; }
+ 
+    .log-entry { font-size: 0.72rem; }
+ 
+    /* Leyenda en 2 columnas */
+    .legend {
+        gap: 4px 8px;
+        font-size: 0.62rem;
+        padding: 6px 8px;
+    }
+}
+ 
+/* RESPONSIVO — móvil muy pequeño (≤ 360px) */
+@media (max-width: 360px) {
+    .board-frame { padding: 4px; }
+    #board       { gap: 2px; padding: 4px; }
+ 
+    .dice-card {
+        bottom: 6px;
+        right: 6px;
+        padding: 6px 8px;
+    }
+ 
+    #dice {
+        width: 44px;
+        height: 44px;
+        padding: 6px;
+        margin-bottom: 6px;
+    }
+ 
+    #roll-btn {
+        font-size: 0.55rem;
+        padding: 5px 4px;
+    }
+}
