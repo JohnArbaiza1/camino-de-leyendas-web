@@ -1,6 +1,7 @@
 // menu.js — Lógica del menú principal: selección de jugadores y arranque del juego
 
 import { initGame } from './players.js';
+import { playGameIntro } from '../render/gameIntro.js';
 
 // Función para encargada de actualizar la visibilidad de los selcts de personajes según la cantidad seleccionda
 export function updatePlayerSelect(){
@@ -82,9 +83,18 @@ export function startGame() {
     document.getElementById('menu-screen').classList.add('hide');
     const gameScreen = document.getElementById('game-screen');
     gameScreen.style.display = 'flex';
-    setTimeout(() => gameScreen.classList.add('show'), 20);
-    setTimeout(() => document.getElementById('menu-screen').style.display = 'none', 700);
-
+    // Inicializa el juego antes de la animación para que las casillas existan
     initGame(count);
+
+    // Pequeño delay para que el display:flex surta efecto antes de animar
+    setTimeout(() => {
+        gameScreen.classList.add('show');
+        //  Lanza la animación temática de entrada
+        playGameIntro();
+    }, 40);
+
+    setTimeout(() => {
+        document.getElementById('menu-screen').style.display = 'none';
+    }, 700);
 }
 

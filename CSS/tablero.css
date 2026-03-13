@@ -306,3 +306,128 @@ h1 {
     50%       { box-shadow: 0 0 30px rgba(123,79,224,0.6),  inset 0 0 16px rgba(123,79,224,0.25); }
 }
 
+/* RESPONSIVO — tablet (≤ 780px)
+   Panel lateral baja debajo del tablero en columna*/
+@media (max-width: 780px) {
+    #game-screen { padding: 12px; }
+ 
+    .game-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "board"
+            "heroes"
+            "dice"
+            "log"
+            "legend";
+        gap: 12px;
+    }
+}
+ 
+/* RESPONSIVO — móvil (≤ 520px)
+   Dado flotante sobre el tablero, panel compacto */
+@media (max-width: 520px) {
+    #game-screen { padding: 8px; }
+ 
+    h1      { letter-spacing: 1px; }
+    .subtitle { display: none; }       /* oculta subtítulo para ganar espacio */
+ 
+    .header-ornament-line { width: 80px; }
+    .header-wrap { margin-bottom: 10px; }
+ 
+    /* El tablero ocupa todo el ancho con posición relative
+       para que el dado flotante se ancle a él */
+    .board-container {
+        position: relative;
+    }
+ 
+    .board-frame { padding: 8px; }
+ 
+    /* Casillas más compactas en móvil */
+    .cell .num          { font-size: 0.45rem; }
+    .cell .cell-icon    { font-size: 0.7rem;  }
+    .cell .cell-label   { display: none; }     /* oculta etiquetas de texto en celdas */
+ 
+
+    .dice-card {
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        z-index: 50;
+        width: auto;
+        min-width: 0;
+        padding: 8px 10px;
+        background: rgba(5, 14, 8, 0.96);
+        backdrop-filter: blur(12px);
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        box-shadow:
+            0 0 16px rgba(0,255,136,0.15),
+            0 4px 24px rgba(0,0,0,0.8);
+    }
+ 
+    .dice-card .card-title { display: none; }
+ 
+    /* Dado más pequeño */
+    #dice {
+        width: 52px;
+        height: 52px;
+        padding: 7px;
+        margin-bottom: 8px;
+    }
+ 
+    /* Botón más compacto */
+    #roll-btn {
+        font-size: 0.6rem;
+        padding: 7px 6px;
+        letter-spacing: 1px;
+    }
+ 
+    /* Panel de héroes horizontal en móvil */
+    .heroes-card {
+        padding: 10px 12px;
+    }
+ 
+    .player-row {
+        padding: 5px 6px;
+        margin-bottom: 3px;
+    }
+ 
+    .player-name { font-size: 0.65rem; }
+    .player-pos  { font-size: 0.6rem;  }
+ 
+    /* Log más corto */
+    #log { max-height: 100px; }
+ 
+    .log-entry { font-size: 0.72rem; }
+ 
+    /* Leyenda en 2 columnas */
+    .legend {
+        gap: 4px 8px;
+        font-size: 0.62rem;
+        padding: 6px 8px;
+    }
+}
+ 
+/* RESPONSIVO — móvil muy pequeño (≤ 360px) */
+@media (max-width: 360px) {
+    .board-frame { padding: 4px; }
+    #board       { gap: 2px; padding: 4px; }
+ 
+    .dice-card {
+        bottom: 6px;
+        right: 6px;
+        padding: 6px 8px;
+    }
+ 
+    #dice {
+        width: 44px;
+        height: 44px;
+        padding: 6px;
+        margin-bottom: 6px;
+    }
+ 
+    #roll-btn {
+        font-size: 0.55rem;
+        padding: 5px 4px;
+    }
+}
