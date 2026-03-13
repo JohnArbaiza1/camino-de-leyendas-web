@@ -32,8 +32,8 @@
 
     --crimson:      #8b1a1a;           /* penalizaciones o peligro */
     --crimson-glow: #cc2222;
-    --food:         #ff3366;           /* elementos críticos comida */
-    --food-glow:    #ff336688;
+    --food:         #33fff1;           /* elementos críticos comida */
+    --food-glow:    #ffb43388;
 
     /* Otros neutros / secundarios */
     --silver:       #c8c8d8;           /* texto neutro, paneles secundarios */
@@ -44,7 +44,7 @@
     --p1:           var(--green);       
     --p2:           var(--gold);        
     --p3:           var(--food);        
-    --p4:           var(--crimson);     
+    --p4:           var(--food-glow);     
 
     /* Colores para tipos de casilla — armonizados con paleta */
     --bonus:        var(--green);       

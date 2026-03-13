@@ -54,6 +54,14 @@ export function updateCharacterOptions(){
 
 }
 
+// Mapa de nombre de personaje → índice del array en players.js
+const CHAR_INDEX = {
+    guerrero : 0,
+    mago     : 1,
+    arquero  : 2,
+    picaro   : 3
+};
+
 // Valida el formulario, oculta el menú y arranca el juego
 export function startGame() {
 
@@ -66,30 +74,25 @@ export function startGame() {
         return; // Detiene la ejecución
     }
 
-    // Recorre todos los jugadores que van a jugar
+    // Recoge los índices reales según el personaje elegido
+    const selectedIndexes = [];
     for (let i = 0; i < count; i++) {
-
-        // Obtiene el personaje seleccionado por cada jugador
         const val = document.getElementById("char" + i).value;
-
-        // Si el jugador no eligió personaje
         if (!val) {
             alert('Jugador ' + (i + 1) + ' debe elegir un personaje.');
             return;
         }
+        selectedIndexes.push(CHAR_INDEX[val]); // convierte "arquero" → 2, etc.
     }
 
-    // Oculta el menú con animación
     document.getElementById('menu-screen').classList.add('hide');
     const gameScreen = document.getElementById('game-screen');
     gameScreen.style.display = 'flex';
-    // Inicializa el juego antes de la animación para que las casillas existan
-    initGame(count);
 
-    // Pequeño delay para que el display:flex surta efecto antes de animar
+    initGame(selectedIndexes); // ahora sí recibe [0, 2] en vez de 2
+
     setTimeout(() => {
         gameScreen.classList.add('show');
-        //  Lanza la animación temática de entrada
         playGameIntro();
     }, 40);
 

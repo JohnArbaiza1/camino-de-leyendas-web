@@ -20,58 +20,61 @@ const SPECIAL_TOAST = {
 };
 
 // Variables de estado
-export let playerNames   = [...defaultNames]; // copia de los nombres para poder modificarlos
-export let state         = {};                // aquí se guardará todo el estado del juego
-export let numPlayers  = 4;
+export let playerNames  = [...defaultNames]; // copia de los nombres para poder modificarlos
+export let state        = {};                // aquí se guardará todo el estado del juego
+export let numPlayers   = 4;
+export let activePlayers = []; // índices reales de los personajes seleccionados
 
-// función que construye el tablero, inicializa el estado y genera las tarjetas de jugadores
-export function initGame(count = 4){
-    numPlayers = count;
+// Construye el tablero, inicializa el estado y genera las tarjetas de jugadores
+// selectedIndexes: array con los índices elegidos, ej: [0, 2] para Guerrero y Arquero
+export function initGame(selectedIndexes = [0, 1, 2, 3]) {
+    activePlayers = selectedIndexes;
+    numPlayers    = selectedIndexes.length;
     buildBoard();
 
     state = {
-        positions : Array(count).fill(1), //  solo N posiciones según jugadores activos
-        skipTurns : Array(count).fill(0), //  solo N turnos según jugadores activos
-        current   : 0,                    // índice del jugador activo (empieza el 1)
-        rolling   : false                 // semáforo para evitar doble-click en el dado
+        positions : Array(numPlayers).fill(1),
+        skipTurns : Array(numPlayers).fill(0),
+        current   : 0,
+        rolling   : false
     };
 
     // Limpia el log al iniciar partida nueva
     const log = document.getElementById('log');
     if (log) log.innerHTML = '';
 
-    // Genera el HTML de jugadores dinámicamente solo para los activos
+    // Genera el HTML de jugadores dinámicamente solo para los seleccionados
     const container = document.getElementById('players-container');
     container.innerHTML = '';
 
-    for (let p = 0; p < count; p++) { // itera solo hasta count, no hasta 4
+    for (let i = 0; i < numPlayers; i++) {
+        const p = activePlayers[i]; // índice real del personaje
         container.innerHTML += `
-            <div class="player-row" id="player-row-${p}">
+            <div class="player-row" id="player-row-${i}">
                 <span class="player-emoji">${playerEmojis[p]}</span>
-                <span class="player-name" id="pn${p}">${playerNames[p]}</span>
-                <span class="player-pos"  id="pp${p}">Casilla 1</span>
+                <span class="player-name" id="pn${i}">${playerNames[p]}</span>
+                <span class="player-pos"  id="pp${i}">Casilla 1</span>
             </div>
         `;
     }
 
-    // Resalta al primer jugador
     highlightCurrentPlayer();
 }
 
-// Función que ejecuta el turno completo: tirada, movimiento y efecto de casilla especial
+// Ejecuta el turno completo: tirada, movimiento y efecto de casilla especial
 export async function rollDice() {
 
-    // Evita lanzar si ya hay una tirada en curso
     if (state.rolling) return;
     state.rolling = true;
 
-    const p = state.current;
-    const name = playerNames[p];
+    const i       = state.current;        // índice del turno (0, 1, 2...)
+    const p       = activePlayers[i];     // índice real del personaje
+    const name    = playerNames[p];
 
     // Turno penalizado — consume el skip y pasa al siguiente
-    if (state.skipTurns[p] > 0) {
-        state.skipTurns[p]--;
-        addLog(`${playerEmojis[p]} <b>${name}</b> pierde su turno. (${state.skipTurns[p]} restantes)`);
+    if (state.skipTurns[i] > 0) {
+        state.skipTurns[i]--;
+        addLog(`${playerEmojis[p]} <b>${name}</b> pierde su turno. (${state.skipTurns[i]} restantes)`);
         nextTurn();
         return;
     }
@@ -84,30 +87,24 @@ export async function rollDice() {
         diceEl.classList.remove('rolling');
     }
 
-    // Genera un número entre 1 y 6
-    const roll = Math.ceil(Math.random() * 6);
-
-    // Muestra la cara del dado en pantalla
+    const roll   = Math.ceil(Math.random() * 6);
     mostrarCaras(roll);
 
-    const oldPos = state.positions[p];
-    // Math.min asegura que no se pase de la casilla final
+    const oldPos = state.positions[i];
     const newPos = Math.min(oldPos + roll, TOTAL);
 
-    // Mueve la ficha paso a paso
-    await animateMove(p, oldPos, newPos);
-    state.positions[p] = newPos;
+    await animateMove(i, oldPos, newPos);
+    state.positions[i] = newPos;
 
-    // Actualiza el indicador de casilla del jugador
-    const posLabel = document.getElementById(`pp${p}`);
+    const posLabel = document.getElementById(`pp${i}`);
     if (posLabel) posLabel.textContent = `Casilla ${newPos}`;
 
-    // Verifica victoria 
+    // Verifica victoria
     if (newPos >= TOTAL) {
         addLog(`🏆 <b>${name}</b> ¡ha llegado a la meta! ¡VICTORIA!`);
-        showWinner(p);
+        showWinner(i);
         state.rolling = false;
-        return; // no pasa turno, el juego termina
+        return;
     }
 
     // Aplica el efecto de la casilla especial si existe
@@ -118,8 +115,8 @@ export async function rollDice() {
             addLog(`🌀 <b>${name}</b> cae en <i>${sp.nombre}</i> — teletransportado a casilla ${sp.teleport}`);
             showToast(sp, p);
             await delay(400);
-            await animateMove(p, newPos, sp.teleport);
-            state.positions[p] = sp.teleport;
+            await animateMove(i, newPos, sp.teleport);
+            state.positions[i] = sp.teleport;
             if (posLabel) posLabel.textContent = `Casilla ${sp.teleport}`;
 
         } else if (sp.move && sp.move !== 0) {
@@ -128,12 +125,12 @@ export async function rollDice() {
             addLog(`${sp.emoji} <b>${name}</b> cae en <i>${sp.nombre}</i> — ${dir} → casilla ${dest}`);
             showToast(sp, p);
             await delay(400);
-            await animateMove(p, newPos, dest);
-            state.positions[p] = dest;
+            await animateMove(i, newPos, dest);
+            state.positions[i] = dest;
             if (posLabel) posLabel.textContent = `Casilla ${dest}`;
 
         } else if (sp.skip) {
-            state.skipTurns[p] += sp.skip;
+            state.skipTurns[i] += sp.skip;
             addLog(`${sp.emoji} <b>${name}</b> cae en <i>${sp.nombre}</i> — pierde ${sp.skip} turno(s)`);
             showToast(sp, p);
         }
@@ -151,15 +148,16 @@ function nextTurn() {
 
 // Marca con la clase 'active' la fila del jugador que tiene el turno actual
 function highlightCurrentPlayer() {
-    for (let p = 0; p < numPlayers; p++) {
-        const row = document.getElementById(`player-row-${p}`);
+    for (let i = 0; i < numPlayers; i++) {
+        const row = document.getElementById(`player-row-${i}`);
         if (!row) continue;
-        row.classList.toggle('active', p === state.current);
+        row.classList.toggle('active', i === state.current);
     }
 }
 
 // Rellena y muestra el modal de victoria
-function showWinner(p) {
+function showWinner(i) {
+    const p      = activePlayers[i];
     const modal  = document.getElementById('winner-modal');
     const nameEl = document.getElementById('winner-name');
     const msgEl  = document.getElementById('winner-msg');
@@ -171,7 +169,7 @@ function showWinner(p) {
     modal.classList.add('show');
 }
 
-// Notificación flotante que aparece al caer en casilla especial
+// Notificación flotante al caer en casilla especial
 function showToast(sp, p) {
     const cfg = SPECIAL_TOAST[sp.type];
     if (!cfg) return;
@@ -188,17 +186,15 @@ function showToast(sp, p) {
     el.style.setProperty('--toast-color', cfg.color);
     document.body.appendChild(el);
 
-    // Entrada con pequeño delay para que la transición CSS sea visible
     requestAnimationFrame(() => el.classList.add('visible'));
 
-    // Auto-cierre a los 3 segundos
     setTimeout(() => {
         el.classList.remove('visible');
         setTimeout(() => el.remove(), 400);
     }, 3000);
 }
 
-// Añade una línea al log de la crónica y hace scroll al último mensaje
+// Añade una línea al log de la crónica
 function addLog(html) {
     const log = document.getElementById('log');
     if (!log) return;
@@ -209,31 +205,29 @@ function addLog(html) {
     log.scrollTop = log.scrollHeight;
 }
 
-// Mueve la ficha del jugador casilla por casilla con una pequeña pausa entre pasos
-async function animateMove(p, from, to) {
+// Mueve la ficha del jugador casilla por casilla
+async function animateMove(i, from, to) {
+    const p    = activePlayers[i];
     const step = from < to ? 1 : -1;
 
     for (let pos = from; pos !== to; pos += step) {
-        placeToken(p, pos);
-        const cell  = document.getElementById(`cell-${pos}`);
-        const rect  = cell?.getBoundingClientRect();
+        placeToken(i, p, pos);
+        const cell = document.getElementById(`cell-${pos}`);
+        const rect = cell?.getBoundingClientRect();
 
-        // Partícula de rastro en cada casilla recorrida
         if (rect) spawnParticle(
             rect.left + rect.width  / 2,
             rect.top  + rect.height / 2,
             trailColors[p]
         );
 
-        await delay(120); // pausa entre pasos 
+        await delay(120);
     }
 
-    // Coloca la ficha en la casilla destino
-    placeToken(p, to);
+    placeToken(i, p, to);
     const destCell = document.getElementById(`cell-${to}`);
     const destRect = destCell?.getBoundingClientRect();
 
-    // Efecto de llegada en la casilla destino
     if (destRect) spawnBurst(
         destRect.left + destRect.width  / 2,
         destRect.top  + destRect.height / 2,
@@ -242,20 +236,20 @@ async function animateMove(p, from, to) {
 }
 
 // Quita la ficha de su casilla anterior y la coloca en la nueva
-function placeToken(p, pos) {
-    // Elimina el token del jugador de cualquier casilla donde esté
-    document.querySelectorAll(`.token-${p}`).forEach(el => el.remove());
+function placeToken(i, p, pos) {
+    // Usa el índice de turno (i) para identificar el token en el DOM
+    document.querySelectorAll(`.token-${i}`).forEach(el => el.remove());
 
     const container = document.getElementById(`tokens-${pos}`);
     if (!container) return;
 
     const token = document.createElement('div');
-    token.className = `token token-${p} ${playerColors[p]}`;
+    token.className = `token token-${i} ${playerColors[p]}`;
     token.textContent = playerEmojis[p];
     container.appendChild(token);
 }
 
-// Pequeña utilidad para crear pausas con async/await
+// Utilidad para pausas con async/await
 function delay(seg) {
     return new Promise(resolve => setTimeout(resolve, seg));
 }
