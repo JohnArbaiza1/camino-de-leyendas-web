@@ -176,34 +176,43 @@
 
 /* Estilos para el dado*/
 #dice {
-    width: 76px; height: 76px;
-    background: linear-gradient(145deg, #0d1a10, #0a120d);
-    border-radius: 10px;
-    margin: 0 auto 14px;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle at 20% 20%, #152b1a 0%, #060d09 100%);
+    border-radius: 12px; /* Cuadrado con bordes curvos */
+    margin: 0 auto 16px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     padding: 10px;
-    gap: 3px;
+    gap: 4px;
     box-shadow:
-        0 4px 0 var(--green-dark),
-        0 6px 14px rgba(0,0,0,0.7),
-        inset 0 1px 0 rgba(0,255,136,0.15),
-        var(--glow-sm);
+        0 6px 0 var(--green-dark),
+        0 8px 16px rgba(0,0,0,0.8),
+        inset 0 1px 2px rgba(255,255,255,0.1),
+        inset 0 -6px 15px rgba(0,0,0,0.8),
+        0 0 20px rgba(0,255,136,0.15);
     border: 2px solid var(--gold-dim);
+    position: relative;
+}
+
+#dice::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    border: 1px solid rgba(201,147,58,0.4);
+    pointer-events: none;
 }
 
 #dice.rolling {
-    animation: diceRoll 0.65s ease-out;
+    animation: diceRoll 0.7s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @keyframes diceRoll {
-    0%   { transform: rotateZ(0deg)   scale(1);    }
-    20%  { transform: rotateZ(90deg)  scale(1.2);  }
-    40%  { transform: rotateZ(185deg) scale(0.88); }
-    60%  { transform: rotateZ(270deg) scale(1.12); }
-    80%  { transform: rotateZ(345deg) scale(0.95); }
-    100% { transform: rotateZ(360deg) scale(1);    }
+    0%   { transform: scale(1) rotateZ(0deg) rotateY(0deg);  filter: brightness(1) drop-shadow(0 0 0 var(--green)); }
+    30%  { transform: scale(1.2) rotateZ(180deg) rotateY(180deg); filter: brightness(1.4) drop-shadow(0 0 20px var(--green)); }
+    70%  { transform: scale(0.9) rotateZ(360deg) rotateY(360deg); filter: brightness(1.1); }
+    100% { transform: scale(1) rotateZ(360deg) rotateY(360deg);  filter: brightness(1); }
 }
 
 .dot {
@@ -225,9 +234,9 @@
 
 #roll-btn {
     width: 100%;
-    padding: 11px;
+    padding: 12px;
     border: none;
-    border-radius: 3px;
+    border-radius: 24px;
     font-family: 'Cinzel', serif;
     font-weight: 800;
     font-size: 1rem;

@@ -48,3 +48,39 @@ document.getElementById('btn-go-menu').addEventListener('click', () => {
     menuScreen.style.display = 'flex';
     menuScreen.classList.remove('hide');
 });
+
+// ── Interfaz Móvil (SPA Drawer Toggles) ─────
+const mobilePanels = {
+    heroes: document.querySelector('.heroes-card'),
+    log: document.querySelector('.log-card'),
+    legend: document.getElementById('game-legend')
+};
+const navBtns = {
+    heroes: document.getElementById('btn-toggle-heroes'),
+    log: document.getElementById('btn-toggle-log'),
+    legend: document.getElementById('btn-toggle-legend')
+};
+
+function toggleMobilePanel(panelName) {
+    // Cerrar los otros paneles activos
+    Object.keys(mobilePanels).forEach(key => {
+        if (key !== panelName) {
+            mobilePanels[key]?.classList.remove('open');
+            navBtns[key]?.classList.remove('active');
+        }
+    });
+    // Alternar el panel actual
+    if (mobilePanels[panelName]) {
+        mobilePanels[panelName].classList.toggle('open');
+        navBtns[panelName]?.classList.toggle('active');
+    }
+}
+
+document.getElementById('btn-toggle-heroes')?.addEventListener('click', () => toggleMobilePanel('heroes'));
+document.getElementById('btn-toggle-log')?.addEventListener('click', () => toggleMobilePanel('log'));
+document.getElementById('btn-toggle-legend')?.addEventListener('click', () => toggleMobilePanel('legend'));
+
+// Botones de cerrar (la X dentro del panel flotante)
+document.getElementById('close-heroes')?.addEventListener('click', () => toggleMobilePanel('none'));
+document.getElementById('close-log')?.addEventListener('click', () => toggleMobilePanel('none'));
+document.getElementById('close-legend')?.addEventListener('click', () => toggleMobilePanel('none'));

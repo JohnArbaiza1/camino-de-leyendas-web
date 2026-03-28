@@ -8,35 +8,35 @@ import { spawnParticle, spawnBurst } from '../render/ui.js';
 export const playerColors = ['p1', 'p2', 'p3', 'p4'];
 export const defaultNames = ['Guerrero/a', 'Mago/a', 'Arquero/a', 'Explorador/a'];
 export const playerEmojis = ['🛡️', '🧙', '🏹', '🧭'];
-export const trailColors  = ['#00ff88', '#f0c060', '#ff3366', '#c9933a'];
+export const trailColors = ['#00ff88', '#f0c060', '#ff3366', '#c9933a'];
 
 // Configuración visual de cada tipo de casilla especial para el toast
 const SPECIAL_TOAST = {
-    bonus:   { emoji: '✨', color: '#00ff88', prefix: '¡Magia!',     suffix: 'avanza'           },
-    penalty: { emoji: '☠️', color: '#cc2222', prefix: '¡Maldición!', suffix: 'retrocede'        },
-    trap:    { emoji: '🕸️', color: '#c9933a', prefix: '¡Trampa!',    suffix: 'pierde turno'     },
-    skip:    { emoji: '🧊', color: '#00aaff', prefix: '¡Congelado!', suffix: 'pierde turno'     },
-    portal:  { emoji: '🌀', color: '#7b4fe0', prefix: '¡Portal!',    suffix: 'teletransportado' },
+    bonus: { emoji: '✨', color: '#00ff88', prefix: '¡Magia!', suffix: 'avanza' },
+    penalty: { emoji: '☠️', color: '#cc2222', prefix: '¡Maldición!', suffix: 'retrocede' },
+    trap: { emoji: '🕸️', color: '#c9933a', prefix: '¡Trampa!', suffix: 'pierde turno' },
+    skip: { emoji: '🧊', color: '#00aaff', prefix: '¡Congelado!', suffix: 'pierde turno' },
+    portal: { emoji: '🌀', color: '#7b4fe0', prefix: '¡Portal!', suffix: 'teletransportado' },
 };
 
 // Variables de estado
-export let playerNames  = [...defaultNames]; // copia de los nombres para poder modificarlos
-export let state        = {};                // aquí se guardará todo el estado del juego
-export let numPlayers   = 4;
+export let playerNames = [...defaultNames]; // copia de los nombres para poder modificarlos
+export let state = {};                // aquí se guardará todo el estado del juego
+export let numPlayers = 4;
 export let activePlayers = []; // índices reales de los personajes seleccionados
 
 // Construye el tablero, inicializa el estado y genera las tarjetas de jugadores
 // selectedIndexes: array con los índices elegidos, ej: [0, 2] para Guerrero y Arquero
 export function initGame(selectedIndexes = [0, 1, 2, 3]) {
     activePlayers = selectedIndexes;
-    numPlayers    = selectedIndexes.length;
+    numPlayers = selectedIndexes.length;
     buildBoard();
 
     state = {
-        positions : Array(numPlayers).fill(1),
-        skipTurns : Array(numPlayers).fill(0),
-        current   : 0,
-        rolling   : false
+        positions: Array(numPlayers).fill(1),
+        skipTurns: Array(numPlayers).fill(0),
+        current: 0,
+        rolling: false
     };
 
     // Limpia el log al iniciar partida nueva
@@ -67,9 +67,9 @@ export async function rollDice() {
     if (state.rolling) return;
     state.rolling = true;
 
-    const i       = state.current;        // índice del turno (0, 1, 2...)
-    const p       = activePlayers[i];     // índice real del personaje
-    const name    = playerNames[p];
+    const i = state.current;        // índice del turno (0, 1, 2...)
+    const p = activePlayers[i];     // índice real del personaje
+    const name = playerNames[p];
 
     // Turno penalizado — consume el skip y pasa al siguiente
     if (state.skipTurns[i] > 0) {
@@ -87,7 +87,7 @@ export async function rollDice() {
         diceEl.classList.remove('rolling');
     }
 
-    const roll   = Math.ceil(Math.random() * 6);
+    const roll = Math.ceil(Math.random() * 6);
     mostrarCaras(roll);
 
     const oldPos = state.positions[i];
@@ -121,7 +121,7 @@ export async function rollDice() {
 
         } else if (sp.move && sp.move !== 0) {
             const dest = Math.max(1, Math.min(newPos + sp.move, TOTAL));
-            const dir  = sp.move > 0 ? `avanza ${sp.move}` : `retrocede ${Math.abs(sp.move)}`;
+            const dir = sp.move > 0 ? `avanza ${sp.move}` : `retrocede ${Math.abs(sp.move)}`;
             addLog(`${sp.emoji} <b>${name}</b> cae en <i>${sp.nombre}</i> — ${dir} → casilla ${dest}`);
             showToast(sp, p);
             await delay(400);
@@ -142,7 +142,7 @@ export async function rollDice() {
 // Pasa al siguiente jugador y libera el semáforo del dado
 function nextTurn() {
     state.current = (state.current + 1) % numPlayers;
-    state.rolling  = false;
+    state.rolling = false;
     highlightCurrentPlayer();
 }
 
@@ -151,20 +151,30 @@ function highlightCurrentPlayer() {
     for (let i = 0; i < numPlayers; i++) {
         const row = document.getElementById(`player-row-${i}`);
         if (!row) continue;
-        row.classList.toggle('active', i === state.current);
+        const isActive = i === state.current;
+        row.classList.toggle('active', isActive);
+
+        // Actualizar el indicador SPA del Drawer Móvil
+        if (isActive) {
+            const mobileIndicator = document.getElementById('mobile-current-player');
+            if (mobileIndicator) {
+                const p = activePlayers[i];
+                mobileIndicator.textContent = `${playerEmojis[p]} ${playerNames[p]}`;
+            }
+        }
     }
 }
 
 // Rellena y muestra el modal de victoria
 function showWinner(i) {
-    const p      = activePlayers[i];
-    const modal  = document.getElementById('winner-modal');
+    const p = activePlayers[i];
+    const modal = document.getElementById('winner-modal');
     const nameEl = document.getElementById('winner-name');
-    const msgEl  = document.getElementById('winner-msg');
+    const msgEl = document.getElementById('winner-msg');
 
     if (!modal) return;
     if (nameEl) nameEl.textContent = `¡${playerNames[p]} gana!`;
-    if (msgEl)  msgEl.textContent  = `${playerEmojis[p]} Ha llegado a la meta y será recordado como una verdadera leyenda.`;
+    if (msgEl) msgEl.textContent = `${playerEmojis[p]} Ha llegado a la meta y será recordado como una verdadera leyenda.`;
 
     modal.classList.add('show');
 }
@@ -207,7 +217,7 @@ function addLog(html) {
 
 // Mueve la ficha del jugador casilla por casilla
 async function animateMove(i, from, to) {
-    const p    = activePlayers[i];
+    const p = activePlayers[i];
     const step = from < to ? 1 : -1;
 
     for (let pos = from; pos !== to; pos += step) {
@@ -216,8 +226,8 @@ async function animateMove(i, from, to) {
         const rect = cell?.getBoundingClientRect();
 
         if (rect) spawnParticle(
-            rect.left + rect.width  / 2,
-            rect.top  + rect.height / 2,
+            rect.left + rect.width / 2,
+            rect.top + rect.height / 2,
             trailColors[p]
         );
 
@@ -229,8 +239,8 @@ async function animateMove(i, from, to) {
     const destRect = destCell?.getBoundingClientRect();
 
     if (destRect) spawnBurst(
-        destRect.left + destRect.width  / 2,
-        destRect.top  + destRect.height / 2,
+        destRect.left + destRect.width / 2,
+        destRect.top + destRect.height / 2,
         trailColors[p]
     );
 }

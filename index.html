@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camino de Leyendas Web</title>
 
     <!-- llamando a las fuentes a utilizar-->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
     <!-- llamando a los estilos para el juego-->
-    
+
     <!-- estilos de la pantalla principal y menu-->
     <link rel="stylesheet" href="./CSS/style.css">
     <!-- estilos para el tablero-->
@@ -19,13 +22,14 @@
     <!-- estilos para el responsive-->
     <link rel="stylesheet" href="./CSS/responsive.css">
 </head>
+
 <body>
 
     <!-- contenedor principal del juego -->
     <div class="game-container">
 
-    <!-- Partículas flotantes generadas con JS -->
-    <div class="sparks" id="sparks"></div>
+        <!-- Partículas flotantes generadas con JS -->
+        <div class="sparks" id="sparks"></div>
 
         <!-- Menú de inicio -->
         <div id="menu-screen">
@@ -38,8 +42,9 @@
 
             <div class="menu-title">Camino de Leyendas <br> Web</div>
             <p class="menu-subtitle">
-                Atrévete a atravesar un camino lleno de desafíos, peligros y recompensas.  
-                El primer jugador que lleve una de las tres fichas sagradas hasta la meta será proclamado un héroe legendario.  <br>
+                Atrévete a atravesar un camino lleno de desafíos, peligros y recompensas.
+                El primer jugador que lleve una de las tres fichas sagradas hasta la meta será proclamado un héroe
+                legendario. <br>
                 ¿Tienes lo necesario para convertirte en leyenda?
             </p>
 
@@ -49,7 +54,7 @@
                 <div class="card-corner-bl"></div>
 
                 <h2>SELECCIONA TU PERSONAJE</h2>
-                
+
                 <div class="divider">
                     <div class="divider-line"></div>
                     <span class="divider-gem">◆</span>
@@ -67,7 +72,7 @@
                             <option value="3">3 Jugadores</option>
                             <option value="4">4 Jugadores</option>
                         </select>
-                    </div>                   
+                    </div>
                 </di>
                 <br>
 
@@ -122,7 +127,7 @@
                             <option value="picaro">🧭 Explorador/a</option>
                         </select>
                     </div>
-                </div>      
+                </div>
 
                 <button class="btn-start"> Comenzar la Aventura </button>
             </div>
@@ -140,6 +145,12 @@
             </div>
             <h1>⚔️ Camino de Leyendas ⚔️</h1>
             <p class="subtitle">Héroes, Magia, Trampas… ¿y Dados de la Suerte?</p>
+
+            <!-- Mobile current turn indicator -->
+            <div class="mobile-turn-indicator hidden-desktop">
+                <span class="turn-label">Es el turno de:</span>
+                <span id="mobile-current-player" class="turn-player">...</span>
+            </div>
         </div>
 
         <div class="game-wrapper">
@@ -150,42 +161,63 @@
                     <div id="board"></div>
                 </div>
                 <br>
-                <!-- Leyenda al pie del tablero (grid-area: legend) -->
-                <div class="legend">
-                    <div class="legend-item"><div class="leg-dot" style="background:var(--bonus)"></div> Magia / Avance</div>
-                    <div class="legend-item"><div class="leg-dot" style="background:var(--penalty)"></div> Maldición / Retroceso</div>
-                    <div class="legend-item"><div class="leg-dot" style="background:var(--trap)"></div> Trampa</div>
-                    <div class="legend-item"><div class="leg-dot" style="background:var(--skip)"></div> Turno perdido</div>
-                    <div class="legend-item"><div class="leg-dot" style="background:var(--portal)"></div> Portal de los Héroes</div>
+                <!-- Leyenda modal para móviles -->
+                <div class="legend" id="game-legend">
+                    <button class="close-mobile-btn hidden-desktop" id="close-legend"
+                        style="position: absolute; right: 10px; top: -10px;">✖</button>
+                    <div class="legend-item">
+                        <div class="leg-dot" style="background:var(--bonus)"></div> Magia / Avance
+                    </div>
+                    <div class="legend-item">
+                        <div class="leg-dot" style="background:var(--penalty)"></div> Maldición / Retroceso
+                    </div>
+                    <div class="legend-item">
+                        <div class="leg-dot" style="background:var(--trap)"></div> Trampa
+                    </div>
+                    <div class="legend-item">
+                        <div class="leg-dot" style="background:var(--skip)"></div> Turno perdido
+                    </div>
+                    <div class="legend-item">
+                        <div class="leg-dot" style="background:var(--portal)"></div> Portal de los Héroes
+                    </div>
                 </div>
             </div>
 
             <div class="card heroes-card">
-                <div class="card-title">⚔ Héroes en el camino</div>
+                <div class="card-title">⚔ Héroes en el camino <button class="close-mobile-btn hidden-desktop"
+                        id="close-heroes">✖</button></div>
                 <div id="players-container"></div>
             </div>
 
-        <div class="card dice-card">
-            <div class="card-title" style="justify-content:center">🎲 Dado Espectral</div>
-            <div id="dice">
-                <div class="dot pos-tl"     id="d-tl"></div>
-                <div class="dot"            id="d-tc" style="grid-column:2;grid-row:1"></div>
-                <div class="dot pos-tr"     id="d-tr"></div>
-                <div class="dot pos-ml"     id="d-ml"></div>
-                <div class="dot pos-center" id="d-ctr"></div>
-                <div class="dot pos-mr"     id="d-mr"></div>
-                <div class="dot pos-bl"     id="d-bl"></div>
-                <div class="dot"            id="d-bc" style="grid-column:2;grid-row:3"></div>
-                <div class="dot pos-br"     id="d-br"></div>
+            <div class="card dice-card">
+                <div class="card-title" style="justify-content:center">🎲 Dado Espectral</div>
+                <div id="dice">
+                    <div class="dot pos-tl" id="d-tl"></div>
+                    <div class="dot" id="d-tc" style="grid-column:2;grid-row:1"></div>
+                    <div class="dot pos-tr" id="d-tr"></div>
+                    <div class="dot pos-ml" id="d-ml"></div>
+                    <div class="dot pos-center" id="d-ctr"></div>
+                    <div class="dot pos-mr" id="d-mr"></div>
+                    <div class="dot pos-bl" id="d-bl"></div>
+                    <div class="dot" id="d-bc" style="grid-column:2;grid-row:3"></div>
+                    <div class="dot pos-br" id="d-br"></div>
+                </div>
+                <button id="roll-btn">⚔ LANZAR DADOS</button>
             </div>
-            <button id="roll-btn">⚔ LANZAR DADOS</button>
-        </div>
 
             <div class="card log-card">
-                <div class="card-title">📜 Crónica</div>
+                <div class="card-title">📜 Crónica <button class="close-mobile-btn hidden-desktop"
+                        id="close-log">✖</button></div>
                 <div id="log"></div>
             </div>
 
+        </div>
+
+        <!-- Barra inferior de navegación para Móviles -->
+        <div class="mobile-bottom-bar hidden-desktop">
+            <button class="mobile-nav-btn" id="btn-toggle-heroes">⚔️ Héroes</button>
+            <button class="mobile-nav-btn" id="btn-toggle-log">📜 Crónica</button>
+            <button class="mobile-nav-btn" id="btn-toggle-legend">ℹ️ Leyenda</button>
         </div>
 
         <!-- Modal ganador -->
