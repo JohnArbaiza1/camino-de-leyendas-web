@@ -20,18 +20,21 @@ const KEY_MAP = {
     'bottom-right' : 'br'
 };
 
-// Recibe un número (1-6) y enciende los puntos correspondientes en el HTML
-export function mostrarCaras(n) {
+// Recibe el ID del dado y el número (1-6) a mostrar y enciende los puntos correspondientes en el HTML
+export function mostrarCaras(diceId, n) {
+
+    const diceEl = document.getElementById(diceId);
+    if (!diceEl) return;
 
     // Referencias a todos los puntos del dado en el DOM
     const slots = {
-        tl  : document.getElementById('d-tl'),
-        tr  : document.getElementById('d-tr'),
-        ml  : document.getElementById('d-ml'),
-        ctr : document.getElementById('d-ctr'),
-        mr  : document.getElementById('d-mr'),
-        bl  : document.getElementById('d-bl'),
-        br  : document.getElementById('d-br'),
+        tl  : diceEl.querySelector('.pos-tl'),
+        tr  : diceEl.querySelector('.pos-tr'),
+        ml  : diceEl.querySelector('.pos-ml'),
+        ctr : diceEl.querySelector('.pos-center'),
+        mr  : diceEl.querySelector('.pos-mr'),
+        bl  : diceEl.querySelector('.pos-bl'),
+        br  : diceEl.querySelector('.pos-br'),
     };
 
     // Apaga todos los puntos primero

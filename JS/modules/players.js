@@ -79,16 +79,33 @@ export async function rollDice() {
         return;
     }
 
-    // Animación de giro del dado
-    const diceEl = document.getElementById('dice');
-    if (diceEl) {
-        diceEl.classList.add('rolling');
-        await delay(650);
-        diceEl.classList.remove('rolling');
+    // Animación de giro de los dados
+    const diceEl1 = document.getElementById('dice1');
+    const diceEl2 = document.getElementById('dice2');
+    if (diceEl1) diceEl1.classList.add('rolling');
+    if (diceEl2) diceEl2.classList.add('rolling');
+    
+    await delay(650);
+    
+    if (diceEl1) diceEl1.classList.remove('rolling');
+    if (diceEl2) diceEl2.classList.remove('rolling');
+
+    const roll1 = Math.ceil(Math.random() * 6);
+    const roll2 = Math.ceil(Math.random() * 6);
+    mostrarCaras('dice1', roll1);
+    mostrarCaras('dice2', roll2);
+
+    // Solo avanza si los números son iguales
+    if (roll1 !== roll2) {
+        addLog(`${playerEmojis[p]} <b>${name}</b> sacó <b>${roll1}</b> y <b>${roll2}</b> — ¡sin movimiento!`);
+        nextTurn();
+        return;
     }
 
-    const roll = Math.ceil(Math.random() * 6);
-    mostrarCaras(roll);
+    const roll = roll1;
+
+    showCustomToast('¡Golpe de suerte!', `${playerEmojis[p]} ${name} consigue dobles y avanza ${roll} posiciones`, trailColors[p], '🎲');
+    addLog(`🎲 ${playerEmojis[p]} <b>${name}</b> sacó dobles de <b>${roll1}</b> — ¡avanza ${roll} casillas!`);
 
     const oldPos = state.positions[i];
     const newPos = Math.min(oldPos + roll, TOTAL);
@@ -184,16 +201,21 @@ function showToast(sp, p) {
     const cfg = SPECIAL_TOAST[sp.type];
     if (!cfg) return;
 
+    showCustomToast(sp.nombre, `${cfg.prefix} — ${playerEmojis[p]} ${playerNames[p]} ${cfg.suffix}`, cfg.color, sp.emoji);
+}
+
+// Notificación flotante genérica
+function showCustomToast(title, desc, color, emoji) {
     const el = document.createElement('div');
     el.className = 'special-toast';
     el.innerHTML = `
-        <span class="toast-emoji">${sp.emoji}</span>
+        <span class="toast-emoji">${emoji}</span>
         <div class="toast-body">
-            <div class="toast-title">${sp.nombre}</div>
-            <div class="toast-desc">${cfg.prefix} — ${playerEmojis[p]} ${playerNames[p]} ${cfg.suffix}</div>
+            <div class="toast-title">${title}</div>
+            <div class="toast-desc">${desc}</div>
         </div>
     `;
-    el.style.setProperty('--toast-color', cfg.color);
+    el.style.setProperty('--toast-color', color);
     document.body.appendChild(el);
 
     requestAnimationFrame(() => el.classList.add('visible'));

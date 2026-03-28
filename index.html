@@ -144,7 +144,7 @@
                 <div class="header-ornament-line r"></div>
             </div>
             <h1>⚔️ Camino de Leyendas ⚔️</h1>
-            <p class="subtitle">Héroes, Magia, Trampas… ¿y Dados de la Suerte?</p>
+            <p class="subtitle">Héroes, Magia, Trampas… ¡y Dados de la Suerte!</p>
 
             <!-- Mobile current turn indicator -->
             <div class="mobile-turn-indicator hidden-desktop">
@@ -190,18 +190,34 @@
             </div>
 
             <div class="card dice-card">
-                <div class="card-title" style="justify-content:center">🎲 Dado Espectral</div>
-                <div id="dice">
-                    <div class="dot pos-tl" id="d-tl"></div>
-                    <div class="dot" id="d-tc" style="grid-column:2;grid-row:1"></div>
-                    <div class="dot pos-tr" id="d-tr"></div>
-                    <div class="dot pos-ml" id="d-ml"></div>
-                    <div class="dot pos-center" id="d-ctr"></div>
-                    <div class="dot pos-mr" id="d-mr"></div>
-                    <div class="dot pos-bl" id="d-bl"></div>
-                    <div class="dot" id="d-bc" style="grid-column:2;grid-row:3"></div>
-                    <div class="dot pos-br" id="d-br"></div>
+                <div class="card-title" style="justify-content:center">🎲 Dados Espectrales</div>
+                <div class="dice-container" style="display: flex; gap: 15px; justify-content: center; margin-bottom: 16px;">
+                    <div id="dice1" class="dice">
+                        <div class="dot pos-tl"></div>
+                        <div class="dot" style="grid-column:2;grid-row:1"></div>
+                        <div class="dot pos-tr"></div>
+                        <div class="dot pos-ml"></div>
+                        <div class="dot pos-center"></div>
+                        <div class="dot pos-mr"></div>
+                        <div class="dot pos-bl"></div>
+                        <div class="dot" style="grid-column:2;grid-row:3"></div>
+                        <div class="dot pos-br"></div>
+                    </div>
+                    <div id="dice2" class="dice">
+                        <div class="dot pos-tl"></div>
+                        <div class="dot" style="grid-column:2;grid-row:1"></div>
+                        <div class="dot pos-tr"></div>
+                        <div class="dot pos-ml"></div>
+                        <div class="dot pos-center"></div>
+                        <div class="dot pos-mr"></div>
+                        <div class="dot pos-bl"></div>
+                        <div class="dot" style="grid-column:2;grid-row:3"></div>
+                        <div class="dot pos-br"></div>
+                    </div>
                 </div>
+                <p style="text-align: center; font-family: 'Crimson Text', serif; font-size: 0.85rem; color: var(--gold-dim); margin-bottom: 12px; font-style: italic;">
+                    * Solo puedes avanzar si sacas dos números iguales *
+                </p>
                 <button id="roll-btn">⚔ LANZAR DADOS</button>
             </div>
 

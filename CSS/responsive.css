@@ -156,31 +156,45 @@
         bottom: 70px; /* Flotando poco más arriba de la barra inferior */
         left: 50%;
         transform: translateX(-50%);
-        width: auto;
-        padding: 8px 14px;
+        width: max-content;
+        min-width: 140px;
+        padding: 12px 20px;
         z-index: 80;
         background: rgba(5, 14, 8, 0.98);
-        border-radius: 10px;
+        border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.8);
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
         gap: 12px;
         border: 1px solid var(--gold-dim);
     }
 
-    #dice {
-        width: 50px;
-        height: 50px;
-        padding: 8px;
+    .card.dice-card .card-title,
+    .card.dice-card p {
+        display: none !important;
+    }
+
+    .dice-container {
+        display: flex;
+        gap: 8px !important;
+        margin: 0 !important;
+    }
+
+    .dice {
+        width: 46px;
+        height: 46px;
+        padding: 6px;
         margin: 0;
     }
 
     #roll-btn {
-        font-size: 0.7rem;
-        padding: 10px 14px;
-        letter-spacing: 0.5px;
+        font-size: 0.75rem;
+        padding: 10px 20px;
+        letter-spacing: 1px;
         margin: 0;
+        width: 100%;
+        white-space: nowrap;
     }
 
     /* BARRA DE BOTONES NAVEGACIÓN INFERIOR */
