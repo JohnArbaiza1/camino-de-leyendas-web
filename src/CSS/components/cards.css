@@ -1,0 +1,65 @@
+@import url('../core/variables.css');
+
+/* PANEL LATERAL — cards */
+.card {
+    position: relative;
+    background: rgba(0,255,136,0.03);
+    border: 1px solid var(--gold-dim);
+    border-radius: 4px;
+    padding: 14px;
+    box-shadow: 0 4px 20px rgba(18, 109, 98, 0.34);
+    backdrop-filter: blur(8px);
+}
+
+/* Esquinas decorativas de las cards */
+.card::before, .card::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    border-color: var(--green-dark);
+    border-style: solid;
+    opacity: 0.8;
+}
+
+.card::before { top: -1px;    left: -1px;  border-width: 1px 0 0 1px; }
+.card::after  { bottom: -1px; right: -1px; border-width: 0 1px 1px 0; }
+
+.card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    color: var(--green-dim);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,255,136,0.1);
+    text-transform: uppercase;
+}
+
+/*  LOG / CRÓNICA */
+#log {
+    max-height: 170px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,255,136,0.2) transparent;
+}
+
+.log-entry {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--parchment); 
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(0,255,136,0.05);
+    line-height: 1.5;
+}
+
+.log-entry:last-child { border-bottom: none; }
+.log-entry b { 
+    font-style: normal;
+    color: var(--green);
+    font-weight: 800;
+}

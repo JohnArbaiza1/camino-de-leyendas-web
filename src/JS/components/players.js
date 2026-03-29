@@ -1,54 +1,42 @@
 // players.js — Gestión de jugadores, estado del juego y lógica de turnos
 
-import { buildBoard, TOTAL, SPECIALS } from './board.js';
-import { mostrarCaras } from './dados.js';
+import { PLAYER_CONFIG, SPECIAL_TOAST_MAP } from '../config/constants.js';
+import { buildBoard, TOTAL, SPECIALS } from '../modules/board.js';
+import { mostrarCaras } from '../modules/dados.js';
 import { spawnParticle, spawnBurst } from '../render/ui.js';
 
-// Configuración básica de jugadores
-export const playerColors = ['p1', 'p2', 'p3', 'p4'];
-export const defaultNames = ['Guerrero/a', 'Mago/a', 'Arquero/a', 'Explorador/a'];
-export const playerEmojis = ['🛡️', '🧙', '🏹', '🧭'];
-export const trailColors = ['#00ff88', '#f0c060', '#ff3366', '#c9933a'];
-
-// Configuración visual de cada tipo de casilla especial para el toast
-const SPECIAL_TOAST = {
-    bonus: { emoji: '✨', color: '#00ff88', prefix: '¡Magia!', suffix: 'avanza' },
-    penalty: { emoji: '☠️', color: '#cc2222', prefix: '¡Maldición!', suffix: 'retrocede' },
-    trap: { emoji: '🕸️', color: '#c9933a', prefix: '¡Trampa!', suffix: 'pierde turno' },
-    skip: { emoji: '🧊', color: '#00aaff', prefix: '¡Congelado!', suffix: 'pierde turno' },
-    portal: { emoji: '🌀', color: '#7b4fe0', prefix: '¡Portal!', suffix: 'teletransportado' },
-};
+// Extraemos las constantes del config para usarlas igual que antes
+export const playerColors  = PLAYER_CONFIG.colors;
+export const defaultNames  = PLAYER_CONFIG.defaultNames;
+export const playerEmojis  = PLAYER_CONFIG.emojis;
+export const trailColors   = PLAYER_CONFIG.trailColors;
 
 // Variables de estado
-export let playerNames = [...defaultNames]; // copia de los nombres para poder modificarlos
-export let state = {};                // aquí se guardará todo el estado del juego
-export let numPlayers = 4;
-export let activePlayers = []; // índices reales de los personajes seleccionados
+export let playerNames  = [...defaultNames];
+export let state        = {};
+export let numPlayers   = 4;
+export let activePlayers = [];
 
-// Construye el tablero, inicializa el estado y genera las tarjetas de jugadores
-// selectedIndexes: array con los índices elegidos, ej: [0, 2] para Guerrero y Arquero
 export function initGame(selectedIndexes = [0, 1, 2, 3]) {
     activePlayers = selectedIndexes;
-    numPlayers = selectedIndexes.length;
+    numPlayers    = selectedIndexes.length;
     buildBoard();
 
     state = {
-        positions: Array(numPlayers).fill(1),
-        skipTurns: Array(numPlayers).fill(0),
-        current: 0,
-        rolling: false
+        positions:  Array(numPlayers).fill(1),
+        skipTurns:  Array(numPlayers).fill(0),
+        current:    0,
+        rolling:    false
     };
 
-    // Limpia el log al iniciar partida nueva
     const log = document.getElementById('log');
     if (log) log.innerHTML = '';
 
-    // Genera el HTML de jugadores dinámicamente solo para los seleccionados
     const container = document.getElementById('players-container');
     container.innerHTML = '';
 
     for (let i = 0; i < numPlayers; i++) {
-        const p = activePlayers[i]; // índice real del personaje
+        const p = activePlayers[i];
         container.innerHTML += `
             <div class="player-row" id="player-row-${i}">
                 <span class="player-emoji">${playerEmojis[p]}</span>
@@ -61,17 +49,15 @@ export function initGame(selectedIndexes = [0, 1, 2, 3]) {
     highlightCurrentPlayer();
 }
 
-// Ejecuta el turno completo: tirada, movimiento y efecto de casilla especial
 export async function rollDice() {
 
     if (state.rolling) return;
     state.rolling = true;
 
-    const i = state.current;        // índice del turno (0, 1, 2...)
-    const p = activePlayers[i];     // índice real del personaje
+    const i    = state.current;
+    const p    = activePlayers[i];
     const name = playerNames[p];
 
-    // Turno penalizado — consume el skip y pasa al siguiente
     if (state.skipTurns[i] > 0) {
         state.skipTurns[i]--;
         addLog(`${playerEmojis[p]} <b>${name}</b> pierde su turno. (${state.skipTurns[i]} restantes)`);
@@ -79,14 +65,13 @@ export async function rollDice() {
         return;
     }
 
-    // Animación de giro de los dados
     const diceEl1 = document.getElementById('dice1');
     const diceEl2 = document.getElementById('dice2');
     if (diceEl1) diceEl1.classList.add('rolling');
     if (diceEl2) diceEl2.classList.add('rolling');
-    
+
     await delay(650);
-    
+
     if (diceEl1) diceEl1.classList.remove('rolling');
     if (diceEl2) diceEl2.classList.remove('rolling');
 
@@ -95,7 +80,6 @@ export async function rollDice() {
     mostrarCaras('dice1', roll1);
     mostrarCaras('dice2', roll2);
 
-    // Solo avanza si los números son iguales
     if (roll1 !== roll2) {
         addLog(`${playerEmojis[p]} <b>${name}</b> sacó <b>${roll1}</b> y <b>${roll2}</b> — ¡sin movimiento!`);
         nextTurn();
@@ -116,7 +100,6 @@ export async function rollDice() {
     const posLabel = document.getElementById(`pp${i}`);
     if (posLabel) posLabel.textContent = `Casilla ${newPos}`;
 
-    // Verifica victoria
     if (newPos >= TOTAL) {
         addLog(`🏆 <b>${name}</b> ¡ha llegado a la meta! ¡VICTORIA!`);
         showWinner(i);
@@ -124,7 +107,6 @@ export async function rollDice() {
         return;
     }
 
-    // Aplica el efecto de la casilla especial si existe
     const sp = SPECIALS[newPos];
 
     if (sp) {
@@ -138,7 +120,7 @@ export async function rollDice() {
 
         } else if (sp.move && sp.move !== 0) {
             const dest = Math.max(1, Math.min(newPos + sp.move, TOTAL));
-            const dir = sp.move > 0 ? `avanza ${sp.move}` : `retrocede ${Math.abs(sp.move)}`;
+            const dir  = sp.move > 0 ? `avanza ${sp.move}` : `retrocede ${Math.abs(sp.move)}`;
             addLog(`${sp.emoji} <b>${name}</b> cae en <i>${sp.nombre}</i> — ${dir} → casilla ${dest}`);
             showToast(sp, p);
             await delay(400);
@@ -156,14 +138,12 @@ export async function rollDice() {
     nextTurn();
 }
 
-// Pasa al siguiente jugador y libera el semáforo del dado
 function nextTurn() {
     state.current = (state.current + 1) % numPlayers;
     state.rolling = false;
     highlightCurrentPlayer();
 }
 
-// Marca con la clase 'active' la fila del jugador que tiene el turno actual
 function highlightCurrentPlayer() {
     for (let i = 0; i < numPlayers; i++) {
         const row = document.getElementById(`player-row-${i}`);
@@ -171,7 +151,6 @@ function highlightCurrentPlayer() {
         const isActive = i === state.current;
         row.classList.toggle('active', isActive);
 
-        // Actualizar el indicador SPA del Drawer Móvil
         if (isActive) {
             const mobileIndicator = document.getElementById('mobile-current-player');
             if (mobileIndicator) {
@@ -182,29 +161,26 @@ function highlightCurrentPlayer() {
     }
 }
 
-// Rellena y muestra el modal de victoria
 function showWinner(i) {
-    const p = activePlayers[i];
-    const modal = document.getElementById('winner-modal');
+    const p      = activePlayers[i];
+    const modal  = document.getElementById('winner-modal');
     const nameEl = document.getElementById('winner-name');
-    const msgEl = document.getElementById('winner-msg');
+    const msgEl  = document.getElementById('winner-msg');
 
     if (!modal) return;
     if (nameEl) nameEl.textContent = `¡${playerNames[p]} gana!`;
-    if (msgEl) msgEl.textContent = `${playerEmojis[p]} Ha llegado a la meta y será recordado como una verdadera leyenda.`;
+    if (msgEl)  msgEl.textContent  = `${playerEmojis[p]} Ha llegado a la meta y será recordado como una verdadera leyenda.`;
 
     modal.classList.add('show');
 }
 
-// Notificación flotante al caer en casilla especial
+// Usa SPECIAL_TOAST_MAP importado desde config en lugar del objeto local
 function showToast(sp, p) {
-    const cfg = SPECIAL_TOAST[sp.type];
+    const cfg = SPECIAL_TOAST_MAP[sp.type];
     if (!cfg) return;
-
     showCustomToast(sp.nombre, `${cfg.prefix} — ${playerEmojis[p]} ${playerNames[p]} ${cfg.suffix}`, cfg.color, sp.emoji);
 }
 
-// Notificación flotante genérica
 function showCustomToast(title, desc, color, emoji) {
     const el = document.createElement('div');
     el.className = 'special-toast';
@@ -226,7 +202,6 @@ function showCustomToast(title, desc, color, emoji) {
     }, 3000);
 }
 
-// Añade una línea al log de la crónica
 function addLog(html) {
     const log = document.getElementById('log');
     if (!log) return;
@@ -237,9 +212,8 @@ function addLog(html) {
     log.scrollTop = log.scrollHeight;
 }
 
-// Mueve la ficha del jugador casilla por casilla
 async function animateMove(i, from, to) {
-    const p = activePlayers[i];
+    const p    = activePlayers[i];
     const step = from < to ? 1 : -1;
 
     for (let pos = from; pos !== to; pos += step) {
@@ -249,7 +223,7 @@ async function animateMove(i, from, to) {
 
         if (rect) spawnParticle(
             rect.left + rect.width / 2,
-            rect.top + rect.height / 2,
+            rect.top  + rect.height / 2,
             trailColors[p]
         );
 
@@ -262,26 +236,23 @@ async function animateMove(i, from, to) {
 
     if (destRect) spawnBurst(
         destRect.left + destRect.width / 2,
-        destRect.top + destRect.height / 2,
+        destRect.top  + destRect.height / 2,
         trailColors[p]
     );
 }
 
-// Quita la ficha de su casilla anterior y la coloca en la nueva
 function placeToken(i, p, pos) {
-    // Usa el índice de turno (i) para identificar el token en el DOM
     document.querySelectorAll(`.token-${i}`).forEach(el => el.remove());
 
     const container = document.getElementById(`tokens-${pos}`);
     if (!container) return;
 
     const token = document.createElement('div');
-    token.className = `token token-${i} ${playerColors[p]}`;
+    token.className  = `token token-${i} ${playerColors[p]}`;
     token.textContent = playerEmojis[p];
     container.appendChild(token);
 }
 
-// Utilidad para pausas con async/await
 function delay(seg) {
     return new Promise(resolve => setTimeout(resolve, seg));
 }

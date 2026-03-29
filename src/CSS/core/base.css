@@ -1,0 +1,86 @@
+/*
+ * base.css — Estilos base y ambientación visual del juego.
+ * Define el reset, el layout del body y los efectos de atmósfera (viñeta,
+ * líneas de escaneo y partículas flotantes). Depende de variables.css.
+ */
+
+/* Importamos los colores */
+@import url('variables.css');
+
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Centra el contenido en pantalla completa */
+body {
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Cinzel', serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Efecto CRT: líneas de escaneo horizontales muy sutiles sobre toda la pantalla */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0,255,136,0.018) 3px,
+            rgba(0,255,136,0.018) 4px
+        );
+    pointer-events: none;
+    z-index: 100;
+}
+
+/* Viñeta oscura alrededor para centrar la atención en el tablero */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 85% 85% at 50% 50%, transparent 55%, rgba(0,0,0,0.75) 100%);
+    pointer-events: none;
+    z-index: 99;
+}
+
+/* Contenedor principal — se posiciona sobre los efectos de fondo */
+.game-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+}
+
+/* Capa fija para las partículas decorativas, detrás de todo el contenido */
+.sparks {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Cada chispa es un círculo animado */
+.spark {
+    position: absolute;
+    border-radius: 50%;
+    animation: sparkFloat linear infinite;
+}
+
+/* Las partículas suben desde abajo, rotan y se desvanecen al llegar arriba */
+@keyframes sparkFloat {
+    0%   { transform: translateY(100vh) rotate(0deg);  opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+}

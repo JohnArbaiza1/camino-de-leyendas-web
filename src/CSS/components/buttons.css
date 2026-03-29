@@ -1,0 +1,24 @@
+@import url('../core/variables.css');
+
+/* Estilo para buttons*/
+#roll-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 24px;
+    font-family: 'Cinzel', serif;
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #c9933a 0%, #f0c060 45%, #c9933a 100%);
+    color: var(--green-dark);
+    box-shadow: 0 4px 16px rgba(201,147,58,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: all 0.2s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+#roll-btn:hover:not(:disabled)  { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(60,201,58,0.55); }
+#roll-btn:active:not(:disabled) { transform: translateY(1px); }
+#roll-btn:disabled              { opacity: 0.3; cursor: not-allowed; }
+

@@ -1,5 +1,5 @@
 /* responsive.css — Estilos adaptativos */
-@import url('colors.css');
+@import url('../core/variables.css');
 
 .hidden-desktop {
     display: none !important;

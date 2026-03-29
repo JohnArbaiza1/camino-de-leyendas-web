@@ -1,9 +1,9 @@
 // Main.js es el Archivo principal que conecta los módulos del juego
 
 // llamamos a las funciones de cada uno de los módulos para que se ejecuten al cargar la página
-import { updatePlayerSelect, startGame, updateCharacterOptions } from './modules/menu.js';
+import { updatePlayerSelect, startGame, updateCharacterOptions } from './components/menu.js';
 import { generateSparks } from './render/animations.js';
-import { rollDice, initGame } from './modules/players.js';
+import { rollDice, initGame, activePlayers } from './components/players.js';
 
 generateSparks();
 
@@ -26,15 +26,14 @@ for (let i = 0; i < 4; i++) {
 }
 
 // ── Botones del modal de victoria ─────
-// "Nueva Aventura" — reinicia el juego con los mismos jugadores
+
+// "Nueva Aventura" — reinicia el juego reutilizando los mismos personajes
 document.getElementById('btn-new-game').addEventListener('click', () => {
     document.getElementById('winner-modal').classList.remove('show');
-    // Obtiene el número de jugadores de la última partida y reinicia
-    const count = parseInt(document.getElementById('player-count').value) || 2;
-    initGame(count);
+    initGame([...activePlayers]); // reutiliza los índices de la partida anterior
 });
 
-// "Menú" — vuelve a la pantalla de selección de personajes
+// "Menú" — vuelve a la pantalla de selección y limpia el formulario
 document.getElementById('btn-go-menu').addEventListener('click', () => {
     document.getElementById('winner-modal').classList.remove('show');
 
@@ -42,6 +41,17 @@ document.getElementById('btn-go-menu').addEventListener('click', () => {
     const gameScreen = document.getElementById('game-screen');
     gameScreen.classList.remove('show');
     setTimeout(() => { gameScreen.style.display = 'none'; }, 500);
+
+    // Limpia el formulario de selección
+    document.getElementById('player-count').value = '';
+    for (let i = 0; i < 4; i++) {
+        const sel = document.getElementById('char' + i);
+        if (sel) sel.value = '';
+    }
+    // Oculta todas las filas de personajes
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById('row-player-' + i)?.classList.add('hidden');
+    }
 
     // Muestra el menú
     const menuScreen = document.getElementById('menu-screen');
