@@ -1,0 +1,96 @@
+// Main.js es el Archivo principal que conecta los módulos del juego
+
+// llamamos a las funciones de cada uno de los módulos para que se ejecuten al cargar la página
+import { updatePlayerSelect, startGame, updateCharacterOptions } from './components/menu.js';
+import { generateSparks } from './render/animations.js';
+import { rollDice, initGame, activePlayers } from './components/players.js';
+
+generateSparks();
+
+// ── Menú ───
+// actualiza qué filas de jugadores se muestran según cantidad elegida
+document.getElementById('player-count').addEventListener('change', updatePlayerSelect);
+// Botón de inicio: valida el formulario y arranca el juego
+document.querySelector('.btn-start').addEventListener('click', startGame);
+
+// ── Dado ───
+// Botón del dado: ejecuta el turno del jugador actual
+document.getElementById('roll-btn').addEventListener('click', rollDice);
+
+// Detecta cambios en los selects de personajes para bloquear repetidos
+for (let i = 0; i < 4; i++) {
+    const select = document.getElementById('char' + i);
+    if (select) {
+        select.addEventListener('change', updateCharacterOptions);
+    }
+}
+
+// ── Botones del modal de victoria ─────
+
+// "Nueva Aventura" — reinicia el juego reutilizando los mismos personajes
+document.getElementById('btn-new-game').addEventListener('click', () => {
+    document.getElementById('winner-modal').classList.remove('show');
+    initGame([...activePlayers]); // reutiliza los índices de la partida anterior
+});
+
+// "Menú" — vuelve a la pantalla de selección y limpia el formulario
+document.getElementById('btn-go-menu').addEventListener('click', () => {
+    document.getElementById('winner-modal').classList.remove('show');
+
+    // Oculta la pantalla de juego
+    const gameScreen = document.getElementById('game-screen');
+    gameScreen.classList.remove('show');
+    setTimeout(() => { gameScreen.style.display = 'none'; }, 500);
+
+    // Limpia el formulario de selección
+    document.getElementById('player-count').value = '';
+    for (let i = 0; i < 4; i++) {
+        const sel = document.getElementById('char' + i);
+        if (sel) sel.value = '';
+    }
+    // Oculta todas las filas de personajes
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById('row-player-' + i)?.classList.add('hidden');
+    }
+
+    // Muestra el menú
+    const menuScreen = document.getElementById('menu-screen');
+    menuScreen.style.display = 'flex';
+    menuScreen.classList.remove('hide');
+});
+
+// ── Interfaz Móvil (SPA Drawer Toggles) ─────
+const mobilePanels = {
+    heroes: document.querySelector('.heroes-card'),
+    log: document.querySelector('.log-card'),
+    legend: document.getElementById('game-legend')
+};
+const navBtns = {
+    heroes: document.getElementById('btn-toggle-heroes'),
+    log: document.getElementById('btn-toggle-log'),
+    legend: document.getElementById('btn-toggle-legend')
+};
+
+function toggleMobilePanel(panelName) {
+    // Cerrar los otros paneles activos
+    Object.keys(mobilePanels).forEach(key => {
+        if (key !== panelName) {
+            mobilePanels[key]?.classList.remove('open');
+            navBtns[key]?.classList.remove('active');
+        }
+    });
+    // Alternar el panel actual
+    if (mobilePanels[panelName]) {
+        mobilePanels[panelName].classList.toggle('open');
+        navBtns[panelName]?.classList.toggle('active');
+    }
+}
+
+document.getElementById('btn-toggle-heroes')?.addEventListener('click', () => toggleMobilePanel('heroes'));
+document.getElementById('btn-toggle-log')?.addEventListener('click', () => toggleMobilePanel('log'));
+document.getElementById('btn-toggle-legend')?.addEventListener('click', () => toggleMobilePanel('legend'));
+
+// Botones de cerrar (la X dentro del panel flotante)
+document.getElementById('close-heroes')?.addEventListener('click', () => toggleMobilePanel('none'));
+document.getElementById('close-log')?.addEventListener('click', () => toggleMobilePanel('none'));
+document.getElementById('close-legend')?.addEventListener('click', () => toggleMobilePanel('none'));

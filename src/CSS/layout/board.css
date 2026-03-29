@@ -1,5 +1,5 @@
 /* Colors import */
-@import url('colors.css');
+@import url('../core/variables.css');
 
 /*  Pantalla de Juego */
 #game-screen {
@@ -74,8 +74,7 @@ h1 {
     letter-spacing: 1px;
 }
 
-/* 
-   LAYOUT PRINCIPAL DEL JUEGO
+/* LAYOUT PRINCIPAL DEL JUEGO
    Estructura: tablero a la izquierda | panel a la derecha */
 .game-wrapper {
     display: grid;

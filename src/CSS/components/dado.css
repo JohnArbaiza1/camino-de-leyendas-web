@@ -1,0 +1,60 @@
+@import url('../core/variables.css');
+
+/* Estilos para los dados*/
+.dice {
+    width: 60px; height: 60px; /* Reduced size slightly to fit two */
+    background: radial-gradient(circle at 20% 20%, #152b1a 0%, #060d09 100%);
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 8px;
+    gap: 3px;
+    box-shadow:
+        0 4px 0 var(--green-dark),
+        0 6px 12px rgba(0,0,0,0.8),
+        inset 0 1px 2px rgba(255,255,255,0.1),
+        inset 0 -4px 10px rgba(0,0,0,0.8),
+        0 0 15px rgba(0,255,136,0.15);
+    border: 2px solid var(--gold-dim);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.dice::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 12px;
+    border: 1px solid rgba(201,147,58,0.4);
+    pointer-events: none;
+}
+
+.dice.rolling {
+    animation: diceRoll 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes diceRoll {
+    0%   { transform: scale(1) rotateZ(0deg) rotateY(0deg);  filter: brightness(1) drop-shadow(0 0 0 var(--green)); }
+    30%  { transform: scale(1.2) rotateZ(180deg) rotateY(180deg); filter: brightness(1.4) drop-shadow(0 0 20px var(--green)); }
+    70%  { transform: scale(0.9) rotateZ(360deg) rotateY(360deg); filter: brightness(1.1); }
+    100% { transform: scale(1) rotateZ(360deg) rotateY(360deg);  filter: brightness(1); }
+}
+
+.dot {
+    width: 100%; aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #80ffbb, var(--green));
+    display: none;
+    box-shadow: 0 0 6px var(--green), 0 0 12px rgba(0,255,136,0.4);
+}
+
+.dot.visible     { display: block; }
+.dot.pos-center  { grid-column: 2; grid-row: 2; }
+.dot.pos-tl      { grid-column: 1; grid-row: 1; }
+.dot.pos-tr      { grid-column: 3; grid-row: 1; }
+.dot.pos-ml      { grid-column: 1; grid-row: 2; }
+.dot.pos-mr      { grid-column: 3; grid-row: 2; }
+.dot.pos-bl      { grid-column: 1; grid-row: 3; }
+.dot.pos-br      { grid-column: 3; grid-row: 3; }
+

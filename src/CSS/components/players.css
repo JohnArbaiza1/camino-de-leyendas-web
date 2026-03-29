@@ -1,0 +1,138 @@
+@import url('../core/variables.css');
+
+/* Estilos de las fichas */
+.tokens {
+    position: absolute;
+    bottom: 2px; right: 2px;
+    display: flex;
+    gap: 1px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 70%;
+    z-index: 5;
+}
+
+.token {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.4);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    transition: transform 0.15s;
+}
+
+.token.p1 { background: radial-gradient(circle at 35% 35%, #00ff88, var(--p1)); box-shadow: 0 0 8px var(--p1); }
+.token.p2 { background: radial-gradient(circle at 35% 35%, #ffe090, var(--p2)); box-shadow: 0 0 8px var(--p2); }
+.token.p3 { background: radial-gradient(circle at 35% 35%, #ff80a0, var(--p3)); box-shadow: 0 0 8px var(--p3); }
+.token.p4 { background: radial-gradient(circle at 35% 35%, #8b1a1a, var(--p4)); box-shadow: 0 0 8px var(--p4); }
+
+.flying-token {
+    position: fixed;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.7);
+    pointer-events: none;
+    z-index: 999;
+    transition: none;
+    box-shadow: 0 0 12px currentColor, 0 0 24px currentColor;
+}
+
+.flying-token.p1 { background: radial-gradient(circle at 35% 35%, #80ffbb, var(--p1)); color: var(--p1); }
+.flying-token.p2 { background: radial-gradient(circle at 35% 35%, #ffe090, var(--p2)); color: var(--p2); }
+.flying-token.p3 { background: radial-gradient(circle at 35% 35%, #ff80a0, var(--p3)); color: var(--p3); }
+.flying-token.p4 { background: radial-gradient(circle at 35% 35%, #8b1a1a, var(--p4)); color: var(--p4); }
+
+/*  Partículas de rastro  */
+.trail-particle {
+    position: fixed;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 998;
+    animation: trailFade 0.5s ease-out forwards;
+}
+
+@keyframes trailFade {
+    0%   { opacity: 0.8; transform: scale(1); }
+    100% { opacity: 0;   transform: scale(0.1); }
+}
+
+/*  Explosión al aterrizar  */
+.land-burst {
+    position: fixed;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 997;
+    border: 2px solid currentColor;
+    animation: burstRing 0.5s ease-out forwards;
+}
+
+@keyframes burstRing {
+    0%   { transform: scale(0.3); opacity: 1; }
+    100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes cellBounce {
+    0%,100% { transform: scale(1); }
+    35%     { transform: scale(1.2) translateY(-3px); }
+    65%     { transform: scale(0.95); }
+}
+
+.cell.bounce { animation: cellBounce 0.45s ease; }
+
+/* Estilos para los jugadores */
+.player-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 8px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    border: 1px solid transparent;
+    transition: all 0.3s;
+    position: relative;
+}
+
+/* Jugador activo — resaltado con borde verde y desplazamiento */
+.player-row.active {
+    background: rgba(0,255,136,0.05);
+    border-color: rgba(0,255,136,0.25);
+    transform: translateX(4px);
+}
+
+.player-row.active::before {
+    content: '▶';
+    position: absolute;
+    left: -15px;
+    color: var(--green);
+    font-size: 0.6rem;
+    animation: swordBob 0.9s infinite;
+}
+
+@keyframes swordBob {
+    0%,100% { transform: translateY(0);   opacity: 0.6; }
+    50%      { transform: translateY(-2px); opacity: 1;  }
+}
+
+.player-emoji {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.player-name {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    color: var(--gold);
+    flex: 1;
+}
+
+.player-pos {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 0.68rem;
+    color: var(--parchment); 
+    white-space: nowrap;
+}
+

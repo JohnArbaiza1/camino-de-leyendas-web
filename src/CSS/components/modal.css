@@ -1,0 +1,111 @@
+@import url('../core/variables.css');
+
+/* MODAL GANADOR */
+#winner-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+#winner-modal.show { display: flex; }
+
+.winner-box {
+    position: relative;
+    background: rgba(0,10,5,0.97);
+    border: 1px solid var(--border-bright);
+    border-radius: 4px;
+    padding: 40px 44px;
+    text-align: center;
+    max-width: 400px;
+    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+        0 0 60px rgba(0,255,136,0.2),
+        0 0 120px rgba(0,255,136,0.08),
+        inset 0 0 40px rgba(0,255,136,0.04);
+}
+
+.winner-box::before, .winner-box::after {
+    content: '';
+    position: absolute;
+    width: 24px; height: 24px;
+    border-color: var(--green-dim);
+    border-style: solid;
+}
+
+.winner-box::before { top: -1px;    left: -1px;  border-width: 2px 0 0 2px; }
+.winner-box::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+@keyframes popIn {
+    from { transform: scale(0.5) rotateZ(-5deg); opacity: 0; }
+    to   { transform: scale(1)   rotateZ(0deg);  opacity: 1; }
+}
+
+.winner-trophy {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 14px;
+    animation: float 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(201,147,58,0.8));
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0);     }
+    50%      { transform: translateY(-10px); }
+}
+
+.winner-box h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, var(--green), #00ddff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 10px rgba(0,255,136,0.5));
+    margin-bottom: 6px;
+}
+
+.winner-box p {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+}
+
+#winner-mensaje{
+    color: var(--parchment);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.winner-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+.winner-btn {
+    padding: 11px 22px;
+    border: none;
+    border-radius: 3px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #c9933a 0%, #f0c060 45%, #c9933a 100%);
+    color: var(--green-dark);
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(201,147,58,0.35);
+}
+
+.winner-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201,147,58,0.55); }
+
+.winner-btn.secondary {
+    background: rgba(0,255,136,0.06);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    box-shadow: none;
+}

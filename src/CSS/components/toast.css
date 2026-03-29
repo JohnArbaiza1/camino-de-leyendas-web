@@ -1,0 +1,57 @@
+@import url('../core/variables.css');
+
+/*  TOAST — notificación de casilla especial */
+.special-toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    opacity: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--bg-deep);
+    border: 1px solid var(--toast-color, var(--green));
+    border-radius: 4px;
+    /* Se evita color-mix() por compatibilidad — se usa rgba fijo para la sombra */
+    box-shadow: 0 0 20px rgba(0,0,0,0.6), 0 8px 32px rgba(0,0,0,0.7);
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    min-width: 260px;
+    max-width: 380px;
+}
+
+.special-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-emoji {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+}
+
+.toast-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.toast-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--toast-color, var(--green));
+    text-transform: uppercase;
+}
+
+.toast-desc {
+    font-family: 'Crimson Text', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--parchment);   
+}

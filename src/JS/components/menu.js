@@ -3,14 +3,14 @@
 import { initGame } from './players.js';
 import { playGameIntro } from '../render/gameIntro.js';
 
-// Función para encargada de actualizar la visibilidad de los selcts de personajes según la cantidad seleccionda
-export function updatePlayerSelect(){
+// Función para encargada de actualizar la visibilidad de los selects de personajes según la cantidad seleccionada
+export function updatePlayerSelect() {
 
-    // se encarga de obtener la caltidad de jugadores seleccionados
+    // se encarga de obtener la cantidad de jugadores seleccionados
     const playerCount = parseInt(document.getElementById('player-count').value);
 
-    //Definimos un for que recorra la posible cantidad de jugadores
-    for(let i = 1; i <= 4; i++){
+    // Definimos un for que recorra la posible cantidad de jugadores
+    for (let i = 1; i <= 4; i++) {
 
         // se encarga de obtener la fila del jugador i
         const playerRow    = document.getElementById('row-player-' + i);
@@ -18,20 +18,20 @@ export function updatePlayerSelect(){
         // obtenemos el select donde el jugador selecciona a su personaje
         const playerSelect = document.getElementById('char' + (i - 1));
 
-        // Verificamos si el jugador i está dentro de los parametros establecidos
-        if( i <= playerCount){
+        // Verificamos si el jugador i está dentro de los parámetros establecidos
+        if (i <= playerCount) {
             // Muestra la fila del jugador
             playerRow.classList.remove('hidden');
-        } else{
+        } else {
             // Oculta la fila si no se usa
             playerRow.classList.add('hidden');
-           playerSelect.value = ''; // Reseteamos el select del jugador i
+            playerSelect.value = ''; // Reseteamos el select del jugador i
         }
     }
 }
 
 // Función que evita que se repitan personajes
-export function updateCharacterOptions(){
+export function updateCharacterOptions() {
 
     // obtenemos todos los selects de personajes
     const selects = document.querySelectorAll("select[id^='char']");
@@ -51,7 +51,6 @@ export function updateCharacterOptions(){
                 select.value !== option.value;
         });
     });
-
 }
 
 // Mapa de nombre de personaje → índice del array en players.js
@@ -71,7 +70,7 @@ export function startGame() {
     // Si no se seleccionó número de jugadores
     if (!count) {
         alert("Por favor selecciona cuántos jugadores van a jugar.");
-        return; // Detiene la ejecución
+        return;
     }
 
     // Recoge los índices reales según el personaje elegido
@@ -89,7 +88,7 @@ export function startGame() {
     const gameScreen = document.getElementById('game-screen');
     gameScreen.style.display = 'flex';
 
-    initGame(selectedIndexes); // ahora sí recibe [0, 2] en vez de 2
+    initGame(selectedIndexes);
 
     setTimeout(() => {
         gameScreen.classList.add('show');
