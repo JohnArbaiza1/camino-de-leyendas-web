@@ -18,6 +18,8 @@
     position: relative;
     background: rgba(0,10,5,0.97);
     border: 1px solid var(--border-bright);
+    color:white;
+    font-weight: 500;
     border-radius: 4px;
     padding: 40px 44px;
     text-align: center;

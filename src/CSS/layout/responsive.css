@@ -90,7 +90,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
+        height: 60%;
         width: 100%;
     }
 
@@ -153,7 +153,7 @@
     /* Botón Flotante Central del Dado (FAB) */
     .card.dice-card {
         position: fixed !important;
-        bottom: 70px; /* Flotando poco más arriba de la barra inferior */
+        bottom: 120px; /* Flotando poco más arriba de la barra inferior */
         left: 50%;
         transform: translateX(-50%);
         width: max-content;
@@ -265,4 +265,7 @@
     .player-label { font-size: 0.72rem; letter-spacing: 1px; }
     .select-wrapper select { font-size: 0.8rem; padding: 8px 12px 8px 14px; }
     .btn-start { font-size: 0.82rem; padding: 11px; }
+    .board-container{
+        height: 90%;
+    }
 }
